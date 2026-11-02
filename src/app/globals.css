@@ -1,26 +1,196 @@
 @import "tailwindcss";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* ── Yallah Spa design tokens (from Figma DS · Atomic) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand — latest Figma tokens */
+  --brand-olive: #4b4d3a;
+  --brand-olive-soft: #6b6e54;
+  --brand-sand: #c7ad85;
+  --brand-sand-ring: #b89452;
+
+  /* Surfaces */
+  /* Primary app canvas — white (Figma content surfaces sit on white) */
+  --bg-page: #ffffff;
+  --bg-page-soft: #faf6f0;
+  --bg-surface: #ffffff;
+  --bg-muted: #f1ece0;
+  --bg-ivory: #fcf7f0;
+  --bg-ghost-overlay: #141712;
+  --border-soft: #dbd6c7;
+
+  /* Text */
+  --text-primary: #292924;
+  --text-secondary: #6b6659;
+  --text-inverse: #faf6f0;
+
+  /* Borders & tags */
+  --border-subtle: #d6d1c2;
+  --tag-center-wash: #475c57;
+  --tag-home-wash: #736147;
+
+  /* Semantic */
+  --success: #407352;
+  --danger: #9e4740;
+
+  /* Radius (Figma) */
+  --radius-sm-token: 8px;
+  --radius-md-token: 12px;
+  --radius-lg-token: 16px;
+  --radius-xl-token: 24px;
+  --radius-pill: 999px;
+
+  /* shadcn theme bridge */
+  --background: var(--bg-page);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--brand-olive);
+  --primary-foreground: var(--text-inverse);
+  --secondary: var(--bg-muted);
+  --secondary-foreground: var(--brand-olive);
+  --muted: var(--bg-muted);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-muted);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--danger);
+  --border: var(--border-subtle);
+  --input: var(--border-subtle);
+  --ring: var(--brand-olive-soft);
+  /* Default radius for shadcn primitives — cards/fields use explicit tokens */
+  --radius: 1rem;
+
+  --sidebar: var(--bg-surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--brand-olive);
+  --sidebar-primary-foreground: var(--text-inverse);
+  --sidebar-accent: var(--bg-muted);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-subtle);
+  --sidebar-ring: var(--brand-olive-soft);
+
+  --chart-1: var(--brand-olive);
+  --chart-2: var(--brand-olive-soft);
+  --chart-3: var(--brand-sand);
+  --chart-4: var(--tag-center-wash);
+  --chart-5: var(--tag-home-wash);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  --color-brand-olive: var(--brand-olive);
+  --color-brand-olive-soft: var(--brand-olive-soft);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-sand-ring: var(--brand-sand-ring);
+  --color-bg-page: var(--bg-page);
+  --color-bg-page-soft: var(--bg-page-soft);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-muted: var(--bg-muted);
+  --color-bg-ivory: var(--bg-ivory);
+  --color-bg-ghost: var(--bg-ghost-overlay);
+  --color-border-soft: var(--border-soft);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-inverse: var(--text-inverse);
+  --color-border-subtle: var(--border-subtle);
+  --color-tag-center: var(--tag-center-wash);
+  --color-tag-home: var(--tag-home-wash);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: var(--radius-sm-token);
+  --radius-md: var(--radius-md-token);
+  --radius-lg: var(--radius-lg-token);
+  --radius-xl: var(--radius-xl-token);
+  --radius-pill: var(--radius-pill);
+  --radius-2xl: var(--radius-xl-token);
+  --radius-3xl: var(--radius-xl-token);
+  --radius-4xl: var(--radius-pill);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-bg-page text-start text-text-primary antialiased;
+  }
+
+  /* Prefer logical inline sides project-wide when direction flips */
+  input,
+  textarea,
+  select {
+    @apply text-start;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-display {
+    @apply text-[28px] font-bold leading-10 sm:text-[32px];
+  }
+  .text-section {
+    @apply text-xl font-bold leading-7;
+  }
+  .text-card-title {
+    @apply text-base font-bold leading-6;
+  }
+  .text-button {
+    @apply text-sm font-medium leading-5;
+  }
+  .text-body {
+    @apply text-sm font-normal leading-[22px];
+  }
+  .text-body-sm {
+    @apply text-[13px] font-normal leading-5;
+  }
+  .text-caption {
+    @apply text-xs font-normal leading-[18px] text-text-secondary;
+  }
+  .text-badge {
+    @apply text-[11px] font-medium leading-4;
+  }
 }
