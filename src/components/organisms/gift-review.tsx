@@ -1,15 +1,16 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/atoms/icon";
 import { Tag } from "@/components/atoms/tag";
 import { CheckboxRow } from "@/components/molecules/checkbox-row";
 import { OrderSummaryCard } from "@/components/organisms/order-summary-card";
 import { SiteHeader } from "@/components/organisms/site-header";
 import { Stepper } from "@/components/organisms/stepper";
+import { useLocalizedProducts } from "@/hooks/use-localized-products";
+import { Link, useRouter } from "@/i18n/navigation";
 import { createGiftOrder } from "@/lib/api";
 import { splitInclusiveTax, formatSarExact } from "@/lib/gift-journey/pricing";
 import {
@@ -26,6 +27,13 @@ type GiftReviewProps = {
 
 export function GiftReview({ products }: GiftReviewProps) {
   const router = useRouter();
+  const t = useTranslations("Review");
+  const tPlaces = useTranslations("Places");
+  const tBadges = useTranslations("Badges");
+  const tCommon = useTranslations("Common");
+
+  const localizedProducts = useLocalizedProducts(products);
+
   const [draft, setDraft] = useState<GiftDraft | null>(null);
   const [accepted, setAccepted] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -40,26 +48,27 @@ export function GiftReview({ products }: GiftReviewProps) {
     setDraft(stored);
   }, [router]);
 
-  const product = products.find((p) => p.id === draft?.giftId);
+  const product = useMemo(
+    () => localizedProducts.find((p) => p.id === draft?.giftId),
+    [localizedProducts, draft?.giftId]
+  );
 
   if (!draft || !product) {
     return (
       <div className="min-h-full bg-bg-page">
         <SiteHeader variant="journey" />
-        <p className="p-8 text-center text-body text-text-secondary">
-          جارٍ تحميل سلة الهدايا…
-        </p>
+        <p className="p-8 text-center text-body text-text-secondary">{t("loading")}</p>
       </div>
     );
   }
 
   const pricing = splitInclusiveTax(product.priceSar);
   const placeLabel =
-    draft.visit?.place === "home" ? "زيارة منزلية" : "في المركز";
+    draft.visit?.place === "home" ? tPlaces("home") : tPlaces("center");
 
   const confirm = async () => {
     if (!accepted) {
-      setError("وافق على الشروط والأحكام لإتمام الطلب.");
+      setError(t("errorTerms"));
       return;
     }
     setConfirming(true);
@@ -76,7 +85,7 @@ export function GiftReview({ products }: GiftReviewProps) {
           : err instanceof Error
             ? err.message
             : "";
-      setError(message || "تعذّر إتمام الطلب.");
+      setError(message || t("errorGeneric"));
       setConfirming(false);
     }
   };
@@ -89,13 +98,10 @@ export function GiftReview({ products }: GiftReviewProps) {
       </div>
 
       <main className="mx-auto grid max-w-[1440px] gap-8 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-8 lg:px-12 lg:py-8">
-        {/* RTL: cart on right (col1), invoice summary on left (col2) */}
         <section className="space-y-5 text-start">
           <div>
-            <h1 className="text-[28px] font-bold text-text-primary">مراجعة الطلب</h1>
-            <p className="mt-1 text-body text-text-secondary">
-              خدمة هدية في سلتك — راجع التفاصيل ثم أتمّ الطلب.
-            </p>
+            <h1 className="text-[28px] font-bold text-text-primary">{t("title")}</h1>
+            <p className="mt-1 text-body text-text-secondary">{t("subtitle")}</p>
           </div>
 
           <article className="relative flex gap-4 rounded-xl border border-border-subtle bg-bg-surface p-[19px]">
@@ -109,10 +115,9 @@ export function GiftReview({ products }: GiftReviewProps) {
                   sizes="112px"
                 />
               </div>
-              {/* Figma Btn/Remove — terracotta circle, white X, on image top-outer corner */}
               <button
                 type="button"
-                aria-label="إزالة من السلة"
+                aria-label={t("removeAria")}
                 className="absolute -top-1.5 right-[-6px] z-10 inline-flex size-5 cursor-pointer items-center justify-center rounded-full border border-white bg-[#8c4038] text-white outline-none hover:bg-[#7a3831]"
                 onClick={() => {
                   clearGiftDraft();
@@ -125,19 +130,24 @@ export function GiftReview({ products }: GiftReviewProps) {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-card-title text-text-primary">{product.title}</h2>
-                <Tag variant="package">هدية</Tag>
+                <Tag variant="package">{tBadges("gift")}</Tag>
               </div>
               <p className="mt-2 text-body-sm text-text-secondary">
-                {product.durationMinutes} دقيقة · {placeLabel}
-                {draft.visit ? ` · فرع ${draft.visit.branchName}` : ""}
+                {tCommon("minutes", { count: product.durationMinutes })} · {placeLabel}
+                {draft.visit
+                  ? ` · ${tCommon("branchNamed", { name: draft.visit.branchName })}`
+                  : ""}
               </p>
               {draft.visit ? (
                 <p className="mt-1 text-caption text-text-secondary">
-                  الموعد: {draft.visit.slotLabel}
+                  {t("appointment", { slot: draft.visit.slotLabel })}
                 </p>
               ) : null}
               <p className="mt-1 text-caption text-text-secondary">
-                إلى {draft.recipientName} · من {draft.senderName}
+                {t("toFrom", {
+                  recipient: draft.recipientName,
+                  sender: draft.senderName,
+                })}
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-end justify-between">
@@ -148,7 +158,7 @@ export function GiftReview({ products }: GiftReviewProps) {
                 href={`/gifts/personalize?giftId=${encodeURIComponent(product.id)}`}
                 className="text-caption font-medium text-brand-olive underline-offset-2 hover:underline"
               >
-                تعديل التخصيص
+                {t("editPersonalize")}
               </Link>
             </div>
           </article>
@@ -157,7 +167,7 @@ export function GiftReview({ products }: GiftReviewProps) {
             id="accept-terms"
             checked={accepted}
             onCheckedChange={setAccepted}
-            label="باستمرارك بإتمام الطلب فأنت موافق على الشروط والأحكام"
+            label={t("terms")}
             className="text-body-sm text-text-secondary"
           />
 

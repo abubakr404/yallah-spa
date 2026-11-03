@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 type StepperProps = {
@@ -33,14 +36,11 @@ function StepDot({ state }: { state: DotState }) {
 
 /**
  * Figma «شريط-خطوات» — اختار → خصص → راجع سلتك
- * Active: olive fill + sand ring · Done: olive · Idle: empty circle
- * Connector 2px · Active/done connectors olive, else border-subtle
  */
-export function Stepper({
-  step,
-  className,
-  labels = ["اختار", "خصص", "راجع سلتك"],
-}: StepperProps) {
+export function Stepper({ step, className, labels }: StepperProps) {
+  const t = useTranslations("Stepper");
+  const resolved = labels ?? [t("choose"), t("personalize"), t("review")];
+
   return (
     <div
       className={cn(
@@ -48,17 +48,17 @@ export function Stepper({
         className
       )}
       role="navigation"
-      aria-label="خطوات الإهداء"
+      aria-label={t("aria")}
     >
-      {labels.map((label, index) => {
+      {resolved.map((label, index) => {
         const n = (index + 1) as 1 | 2 | 3;
         const state: DotState =
           n < step ? "done" : n === step ? "active" : "idle";
         const connectorActive = n < step;
-        const isLast = index === labels.length - 1;
+        const isLast = index === resolved.length - 1;
 
         return (
-          <div key={label} className="flex items-center">
+          <div key={`${label}-${index}`} className="flex items-center">
             <div className="flex items-center gap-2 px-1">
               <StepDot state={state} />
               <span

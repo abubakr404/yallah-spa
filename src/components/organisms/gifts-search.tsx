@@ -1,7 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ComponentProps } from "react";
-import { useRouter } from "next/navigation";
 import { Icon } from "@/components/atoms/icon";
 import { Chip } from "@/components/molecules/chip";
 import { TextField } from "@/components/molecules/text-field";
@@ -9,9 +9,11 @@ import { YallahButton } from "@/components/molecules/button";
 import { FilterSheet, type FilterState } from "@/components/organisms/filter-sheet";
 import { GiftProductCard } from "@/components/organisms/gift-product-card";
 import { SiteHeader } from "@/components/organisms/site-header";
+import { useLocalizedProducts } from "@/hooks/use-localized-products";
+import { useRouter } from "@/i18n/navigation";
 import { createEmptyDraft, saveGiftDraft } from "@/lib/gift-journey/storage";
 import { cn } from "@/lib/utils";
-import type { GiftProduct } from "@/types/gift";
+import type { GiftBadge, GiftProduct } from "@/types/gift";
 
 const PAGE_SIZE = 9;
 
@@ -20,24 +22,35 @@ type GiftsSearchProps = {
   initialType?: string;
 };
 
+function normalizeType(value: string): GiftBadge | "" {
+  if (value === "package" || value === "باقة") return "package";
+  if (value === "session" || value === "جلسة") return "session";
+  return "";
+}
+
 export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
   const router = useRouter();
+  const t = useTranslations("GiftsSearch");
+  const tCommon = useTranslations("Common");
+  const localized = useLocalizedProducts(products);
   const [q, setQ] = useState("");
-  const [type, setType] = useState(initialType);
+  const [type, setType] = useState(normalizeType(initialType));
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState | null>(null);
   const [page, setPage] = useState(1);
 
   const results = useMemo(() => {
-    const query = q.trim();
-    return products.filter((p) => {
-      const badgeFilter = filters?.giftType === "packages"
-        ? "باقة"
-        : filters?.giftType === "sessions"
-          ? "جلسة"
-          : type;
+    const query = q.trim().toLowerCase();
+    return localized.filter((p) => {
+      const badgeFilter =
+        filters?.giftType === "packages"
+          ? "package"
+          : filters?.giftType === "sessions"
+            ? "session"
+            : type;
       if (badgeFilter && p.badge !== badgeFilter) return false;
-      if (filters?.place === "center" && !p.places.includes("center")) return false;
+      if (filters?.place === "center" && !p.places.includes("center"))
+        return false;
       if (filters?.place === "home" && !p.places.includes("home")) return false;
       if (filters?.budget === "lte300" && p.priceSar > 300) return false;
       if (
@@ -47,9 +60,12 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
         return false;
       if (filters?.budget === "gt500" && p.priceSar <= 500) return false;
       if (!query) return true;
-      return p.title.includes(query) || p.description.includes(query);
+      return (
+        p.title.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query)
+      );
     });
-  }, [products, q, type, filters]);
+  }, [localized, q, type, filters]);
 
   const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
 
@@ -69,19 +85,17 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
     <div className="min-h-full bg-bg-page">
       <SiteHeader />
       <main className="mx-auto max-w-[1100px] px-4 py-8 text-start sm:px-6">
-        <h1 className="text-section text-text-primary">ابحث عن هدايا</h1>
-        <p className="mt-1 text-body-sm text-text-secondary">
-          ابحث بالاسم أو الوصف، ثم ابدأ التخصيص.
-        </p>
+        <h1 className="text-section text-text-primary">{t("title")}</h1>
+        <p className="mt-1 text-body-sm text-text-secondary">{t("subtitle")}</p>
 
         <div className="mt-5 flex items-end gap-2">
           <div className="min-w-0 flex-1">
             <TextField
-              label="كلمة البحث"
+              label={t("queryLabel")}
               name="q"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="مثال: مساج، عناية، باقة…"
+              placeholder={t("queryPlaceholder")}
             />
           </div>
           <YallahButton
@@ -90,16 +104,16 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
             className="mb-0 h-12 shrink-0 gap-1.5 px-4"
             onClick={() => setFilterOpen(true)}
           >
-            التصفية
+            {t("filterCta")}
             <Icon name="filter" size={16} />
           </YallahButton>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           {[
-            { value: "", label: "الكل" },
-            { value: "باقة", label: "باقات" },
-            { value: "جلسة", label: "جلسات" },
+            { value: "" as const, label: tCommon("all") },
+            { value: "package" as const, label: t("packages") },
+            { value: "session" as const, label: t("sessions") },
           ].map((opt) => (
             <Chip
               key={opt.label}
@@ -116,12 +130,12 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
 
         <div className="mt-8 flex items-baseline justify-between gap-3">
           <h2 className="text-[15px] font-bold leading-[19px] text-text-primary">
-            نتائج البحث
+            {t("resultsTitle")}
           </h2>
           <p className="text-[12px] leading-4 text-text-secondary">
             {results.length === 0
-              ? "لا نتائج"
-              : `عرض ${start}–${end} من ${results.length} هدية`}
+              ? t("noResults")
+              : t("showing", { start, end, total: results.length })}
           </p>
         </div>
 
@@ -142,24 +156,23 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
 
         {results.length === 0 ? (
           <p className="mt-10 text-center text-body text-text-secondary">
-            لا نتائج لهذا البحث.
+            {t("noResultsBody")}
           </p>
         ) : null}
 
         {results.length > PAGE_SIZE ? (
           <nav
             className="mt-8 flex flex-wrap items-center justify-center gap-2"
-            aria-label="ترقيم الصفحات"
+            aria-label={t("paginationAria")}
           >
-            {/* RTL: السابق يميناً → 1 → 2 → التالي يساراً */}
             <PaginationBtn
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="gap-1 px-2.5 sm:px-3"
-              aria-label="السابق"
+              aria-label={tCommon("previous")}
             >
               <Icon name="chevron-right" size={16} />
-              <span className="hidden sm:inline">السابق</span>
+              <span className="hidden sm:inline">{tCommon("previous")}</span>
             </PaginationBtn>
 
             {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
@@ -168,7 +181,7 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
                 active={n === page}
                 onClick={() => setPage(n)}
                 className="size-10 px-0"
-                aria-label={`صفحة ${n}`}
+                aria-label={t("pageAria", { n })}
                 aria-current={n === page ? "page" : undefined}
               >
                 {n}
@@ -179,9 +192,9 @@ export function GiftsSearch({ products, initialType = "" }: GiftsSearchProps) {
               disabled={page >= pageCount}
               onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
               className="gap-1 px-2.5 sm:px-3"
-              aria-label="التالي"
+              aria-label={tCommon("next")}
             >
-              <span className="hidden sm:inline">التالي</span>
+              <span className="hidden sm:inline">{tCommon("next")}</span>
               <Icon name="chevron-left" size={16} />
             </PaginationBtn>
           </nav>

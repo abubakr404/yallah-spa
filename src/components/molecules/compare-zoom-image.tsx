@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
@@ -25,6 +26,7 @@ export function CompareZoomImage({
   sizes,
   frameClassName,
 }: CompareZoomImageProps) {
+  const t = useTranslations("Compare");
   const [open, setOpen] = useState(false);
 
   return (
@@ -36,7 +38,7 @@ export function CompareZoomImage({
           frameClassName ??
           "group relative block w-full cursor-zoom-in overflow-hidden text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-olive/40"
         }
-        aria-label={`تكبير الصورة: ${alt}`}
+        aria-label={t("zoomAria", { alt })}
       >
         <Image
           src={src}

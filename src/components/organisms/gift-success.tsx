@@ -1,17 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/atoms/icon";
 import { YallahButton } from "@/components/molecules/button";
 import { GiftVoucherPreview } from "@/components/organisms/gift-voucher-preview";
 import { SiteHeader } from "@/components/organisms/site-header";
+import { Link, useRouter } from "@/i18n/navigation";
 import { loadLastOrder } from "@/lib/gift-journey/storage";
 import type { GiftOrderSummary } from "@/types/gift-journey";
 
 export function GiftSuccess() {
   const router = useRouter();
+  const t = useTranslations("Success");
+  const tCatalog = useTranslations("Catalog");
+
   const [order, setOrder] = useState<GiftOrderSummary | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -28,12 +31,12 @@ export function GiftSuccess() {
     return (
       <div className="min-h-full bg-bg-page">
         <SiteHeader variant="journey" />
-        <p className="p-8 text-center text-body text-text-secondary">
-          جارٍ تحميل تأكيد الطلب…
-        </p>
+        <p className="p-8 text-center text-body text-text-secondary">{t("loading")}</p>
       </div>
     );
   }
+
+  const serviceTitle = tCatalog(`${order.product.id}.title`);
 
   const giftLink =
     typeof window !== "undefined"
@@ -54,8 +57,8 @@ export function GiftSuccess() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "هدية يلا سبا",
-          text: `هدية خاصة إلى ${order.draft.recipientName}`,
+          title: t("shareTitle"),
+          text: t("shareText", { name: order.draft.recipientName }),
           url: giftLink,
         });
         return;
@@ -75,14 +78,10 @@ export function GiftSuccess() {
       <SiteHeader variant="journey" />
       <main className="mx-auto flex max-w-[600px] flex-col items-center gap-3.5 px-4 pb-10 pt-5 text-center sm:px-6">
         <span className="rounded-full bg-[rgba(64,115,82,0.12)] px-3 py-[7px] text-[12px] font-medium leading-[17px] text-success">
-          تم إتمام الطلب · {order.orderId}
+          {t("badge", { orderId: order.orderId })}
         </span>
-        <h1 className="text-[26px] font-bold leading-9 text-brand-olive">
-          هديتك جاهزة للمشاركة
-        </h1>
-        <p className="text-[14px] leading-5 text-[#615c52]">
-          حمّل البطاقة أو انسخ رابط الهدية لمشاركتها مع المستفيد.
-        </p>
+        <h1 className="text-[26px] font-bold leading-9 text-brand-olive">{t("title")}</h1>
+        <p className="text-[14px] leading-5 text-[#615c52]">{t("subtitle")}</p>
 
         <div className="mt-1 w-full max-w-[500px] text-start">
           <GiftVoucherPreview
@@ -90,7 +89,7 @@ export function GiftSuccess() {
             recipientName={order.draft.recipientName}
             senderName={order.draft.senderName}
             message={order.draft.message}
-            serviceTitle={order.product.title}
+            serviceTitle={serviceTitle}
             durationMinutes={order.product.durationMinutes}
             visit={order.draft.visit}
           />
@@ -98,35 +97,27 @@ export function GiftSuccess() {
 
         <div className="mt-1 w-full max-w-[500px] rounded-xl bg-bg-muted px-4 py-3 text-start">
           <p className="text-[13px] font-bold leading-[18px] text-text-primary">
-            تعليمات للمستفيد
+            {t("instructionsTitle")}
           </p>
           <ol className="mt-[5px] space-y-[5px] text-[12px] leading-[17px] text-[#615c52]">
-            <li>1) افتح رابط الهدية أو امسح رمز QR</li>
-            <li>2) راجع الفرع والموعد المحددين مسبقًا</li>
-            <li>3) أظهر البطاقة في الفرع في الموعد المحدد</li>
+            <li>{t("step1")}</li>
+            <li>{t("step2")}</li>
+            <li>{t("step3")}</li>
           </ol>
         </div>
 
         <div className="mt-2 flex items-start justify-center gap-7">
-          <IconAction
-            icon="download"
-            label="تحميل البطاقة"
-            onClick={downloadCard}
-          />
+          <IconAction icon="download" label={t("download")} onClick={downloadCard} />
           <IconAction
             icon="copy"
-            label={copied ? "تم النسخ" : "نسخ الرابط"}
+            label={copied ? t("copied") : t("copy")}
             onClick={copyLink}
           />
-          <IconAction
-            icon="share"
-            label="مشاركة الرابط"
-            onClick={shareLink}
-          />
+          <IconAction icon="share" label={t("share")} onClick={shareLink} />
         </div>
 
         <YallahButton variant="secondary" asChild className="mt-2 min-w-[200px]">
-          <Link href="/gifts">أهدِ هدية أخرى</Link>
+          <Link href="/gifts">{t("another")}</Link>
         </YallahButton>
       </main>
     </div>

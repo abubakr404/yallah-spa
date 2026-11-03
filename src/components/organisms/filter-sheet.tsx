@@ -1,11 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { YallahButton } from "@/components/molecules/button";
 import { Chip } from "@/components/molecules/chip";
 import { Dropdown } from "@/components/molecules/dropdown";
 import { Sheet } from "@/components/organisms/sheet";
-import { BRANCH_CITY_OPTIONS_WITH_ALL } from "@/lib/branches";
+import { BRANCH_CITY_OPTIONS } from "@/lib/branches";
 
 type FilterSheetProps = {
   open?: boolean;
@@ -21,18 +22,27 @@ export type FilterState = {
   budget: string;
 };
 
-const branches = [...BRANCH_CITY_OPTIONS_WITH_ALL];
-
 /**
  * Figma «ورقة-تصفية» — ready for gift browse filters.
- * Interactive showcase; pages will wire real filter state later.
  */
 export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps) {
+  const t = useTranslations("FilterSheet");
+  const tCommon = useTranslations("Common");
+  const tPlaces = useTranslations("Places");
+  const tBranches = useTranslations("Branches");
   const [giftType, setGiftType] = useState("all");
   const [branch, setBranch] = useState("all");
   const [place, setPlace] = useState("all");
   const [service, setService] = useState("");
   const [budget, setBudget] = useState("all");
+
+  const branches = [
+    { value: "all", label: tBranches("all") },
+    ...BRANCH_CITY_OPTIONS.map((b) => ({
+      value: b.value,
+      label: tBranches(b.value),
+    })),
+  ];
 
   const clear = () => {
     setGiftType("all");
@@ -45,7 +55,7 @@ export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps)
   return (
     <Sheet
       open={open}
-      title="تصفية الهدايا"
+      title={t("title")}
       onClose={onClose}
       placement="responsive"
       size="sm"
@@ -57,7 +67,7 @@ export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps)
             onClick={clear}
             className="inline-flex h-11 w-[110px] shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-brand-olive text-button text-brand-olive"
           >
-            مسح
+            {t("clear")}
           </button>
           <YallahButton
             fullWidth
@@ -65,65 +75,65 @@ export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps)
               onApply?.({ giftType, branch, place, service, budget })
             }
           >
-            تطبيق التصفية
+            {t("apply")}
           </YallahButton>
         </div>
       }
     >
       <div className="flex flex-col gap-3">
-        <Section label="نوع الهدية">
+        <Section label={t("giftType")}>
           <ChipRow
             value={giftType}
             onChange={setGiftType}
             options={[
-              { value: "all", label: "الكل" },
-              { value: "packages", label: "باقات" },
-              { value: "sessions", label: "جلسات" },
+              { value: "all", label: tCommon("all") },
+              { value: "packages", label: t("packages") },
+              { value: "sessions", label: t("sessions") },
             ]}
           />
         </Section>
 
-        <Section label="الفرع / موقع المستفيد">
+        <Section label={t("branch")}>
           <Dropdown
             className="max-w-none"
             options={branches}
             value={branch}
             onValueChange={setBranch}
-            aria-label="الفرع"
+            aria-label={t("branchAria")}
           />
         </Section>
 
-        <Section label="مكان الخدمة">
+        <Section label={t("place")}>
           <ChipRow
             value={place}
             onChange={setPlace}
             options={[
-              { value: "all", label: "الكل" },
-              { value: "home", label: "منزلية" },
-              { value: "center", label: "في المركز" },
+              { value: "all", label: tCommon("all") },
+              { value: "home", label: tPlaces("homeShort") },
+              { value: "center", label: tPlaces("center") },
             ]}
           />
         </Section>
 
-        <Section label="نوع الخدمة">
+        <Section label={t("serviceType")}>
           <ChipRow
             value={service}
             onChange={setService}
             options={[
-              { value: "massage", label: "مساج" },
-              { value: "bath", label: "حمام" },
-              { value: "skin", label: "بشرة" },
-              { value: "pedi", label: "بدكير" },
+              { value: "massage", label: t("massage") },
+              { value: "bath", label: t("bath") },
+              { value: "skin", label: t("skin") },
+              { value: "pedi", label: t("pedi") },
             ]}
           />
         </Section>
 
-        <Section label="الميزانية">
+        <Section label={t("budget")}>
           <ChipRow
             value={budget}
             onChange={setBudget}
             options={[
-              { value: "all", label: "الكل" },
+              { value: "all", label: t("budgetAny") },
               { value: "lte300", label: "300≤" },
               { value: "300-500", label: "300–500" },
               { value: "gt500", label: "500>" },

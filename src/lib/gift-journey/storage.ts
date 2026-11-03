@@ -11,12 +11,15 @@ function canUseStorage() {
   return typeof window !== "undefined" && typeof window.sessionStorage !== "undefined";
 }
 
-export function createEmptyDraft(giftId: string): GiftDraft {
+export function createEmptyDraft(
+  giftId: string,
+  message: string = DEFAULT_GIFT_MESSAGE
+): GiftDraft {
   return {
     giftId,
     recipientName: "",
     senderName: "",
-    message: DEFAULT_GIFT_MESSAGE,
+    message,
     theme: "olive",
     visit: null,
   };

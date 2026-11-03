@@ -9,6 +9,7 @@ export { CheckboxRow } from "./checkbox-row";
 export { Chip, chipVariants } from "./chip";
 export { Dropdown, type DropdownOption } from "./dropdown";
 export { IconButton, iconButtonVariants } from "./icon-button";
+export { LocaleSwitcher } from "./locale-switcher";
 export { MetaRow } from "./meta-row";
 export { RadioGroup, useRadioGroup } from "./radio-group";
 export { RadioRow } from "./radio-row";

@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Icon } from "@/components/atoms/icon";
 import { YallahButton } from "@/components/molecules/button";
 import { AssistantSheet } from "@/components/organisms/assistant-sheet";
@@ -10,6 +9,8 @@ import { GiftHero } from "@/components/organisms/gift-hero";
 import { GiftProductCard } from "@/components/organisms/gift-product-card";
 import { ProductCarousel } from "@/components/organisms/product-carousel";
 import { SiteHeader } from "@/components/organisms/site-header";
+import { useLocalizedProducts } from "@/hooks/use-localized-products";
+import { Link, useRouter } from "@/i18n/navigation";
 import { createEmptyDraft, saveGiftDraft } from "@/lib/gift-journey/storage";
 import type { GiftProduct } from "@/types/gift";
 
@@ -19,15 +20,19 @@ type GiftsBrowseProps = {
 
 export function GiftsBrowse({ products }: GiftsBrowseProps) {
   const router = useRouter();
+  const t = useTranslations("GiftsBrowse");
+  const tCommon = useTranslations("Common");
+  const tFooter = useTranslations("GiftsFooter");
+  const localized = useLocalizedProducts(products);
   const [assistOpen, setAssistOpen] = useState(false);
 
   const packages = useMemo(
-    () => products.filter((p) => p.badge === "باقة"),
-    [products]
+    () => localized.filter((p) => p.badge === "package"),
+    [localized]
   );
   const sessions = useMemo(
-    () => products.filter((p) => p.badge === "جلسة"),
-    [products]
+    () => localized.filter((p) => p.badge === "session"),
+    [localized]
   );
 
   const startGift = (id: string) => {
@@ -42,9 +47,10 @@ export function GiftsBrowse({ products }: GiftsBrowseProps) {
 
       <main className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-7 sm:px-6 lg:px-12">
         <CarouselSection
-          title="باقات جاهزة للإهداء"
-          subtitle="تجارب كاملة يمكن إهداؤها مباشرة"
-          href="/gifts/search?type=باقة"
+          title={t("packagesTitle")}
+          subtitle={t("packagesSubtitle")}
+          href="/gifts/search?type=package"
+          viewAll={tCommon("viewAll")}
         >
           <ProductCarousel>
             {packages.map((product) => (
@@ -58,9 +64,10 @@ export function GiftsBrowse({ products }: GiftsBrowseProps) {
         </CarouselSection>
 
         <CarouselSection
-          title="جلسات مقترحة للإهداء"
-          subtitle="جلسات مفردة مناسبة كهدية سريعة"
-          href="/gifts/search?type=جلسة"
+          title={t("sessionsTitle")}
+          subtitle={t("sessionsSubtitle")}
+          href="/gifts/search?type=session"
+          viewAll={tCommon("viewAll")}
         >
           <ProductCarousel>
             {sessions.map((product) => (
@@ -76,15 +83,15 @@ export function GiftsBrowse({ products }: GiftsBrowseProps) {
 
       <footer className="border-t border-border-subtle bg-bg-page px-4 py-4 sm:px-6 lg:px-12">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 text-caption">
-          <p className="text-text-primary">يلا سبا — أهدِ الاسترخاء لمن تحب</p>
-          <p>سياسة الخصوصية · الشروط</p>
+          <p className="text-text-primary">{tFooter("tagline")}</p>
+          <p>{tFooter("legal")}</p>
         </div>
       </footer>
 
       <AssistantSheet
         open={assistOpen}
         onClose={() => setAssistOpen(false)}
-        products={products}
+        products={localized}
         onSelectGift={startGift}
       />
     </div>
@@ -95,11 +102,13 @@ function CarouselSection({
   title,
   subtitle,
   href,
+  viewAll,
   children,
 }: {
   title: string;
   subtitle: string;
   href: string;
+  viewAll: string;
   children: React.ReactNode;
 }) {
   return (
@@ -112,9 +121,9 @@ function CarouselSection({
           <p className="text-[13px] leading-[19px] text-[#615c52]">{subtitle}</p>
         </div>
         <YallahButton variant="text" asChild className="gap-1">
-          <Link href={href} aria-label="عرض الكل">
+          <Link href={href} aria-label={viewAll}>
             <span className="hidden text-[14px] font-medium sm:inline">
-              عرض الكل
+              {viewAll}
             </span>
             <Icon name="chevron-left" size={16} className="shrink-0" />
           </Link>

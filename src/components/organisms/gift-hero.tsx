@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { YallahButton } from "@/components/molecules/button";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,8 @@ type GiftHeroProps = {
 
 /** Figma Desktop Browse «Hero» — full-bleed image + soft dim + dual CTAs. */
 export function GiftHero({ className, onAssist }: GiftHeroProps) {
+  const t = useTranslations("GiftHero");
+
   return (
     <section
       className={cn(
@@ -33,14 +36,14 @@ export function GiftHero({ className, onAssist }: GiftHeroProps) {
       />
       <div className="relative z-10 flex flex-col items-center gap-3 px-6 text-center">
         <h1 className="text-[28px] font-bold leading-normal text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.45)] sm:text-[32px]">
-          أهدِ من تحب لحظة استرخاء
+          {t("title")}
         </h1>
         <p className="max-w-xl text-[15px] font-medium leading-normal text-[#f5f0e5] drop-shadow-[0_1px_6px_rgba(0,0,0,0.45)]">
-          اختر هدية مميزة، خصّص بطاقتها، وشاركها مع من تحب.
+          {t("subtitle")}
         </p>
         <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
           <YallahButton asChild className="h-12 min-w-[170px]">
-            <Link href="/gifts/search">ابحث عن هدايا</Link>
+            <Link href="/gifts/search">{t("searchCta")}</Link>
           </YallahButton>
           <YallahButton
             type="button"
@@ -48,8 +51,8 @@ export function GiftHero({ className, onAssist }: GiftHeroProps) {
             className="h-12 min-w-0 border-white bg-[rgba(75,77,58,0.35)] px-5 sm:min-w-[200px] sm:px-[22px] hover:bg-[rgba(75,77,58,0.5)]"
             onClick={onAssist}
           >
-            <span className="sm:hidden">ساعدني أختار</span>
-            <span className="hidden sm:inline">ساعدني أختار هدية</span>
+            <span className="sm:hidden">{t("assistShort")}</span>
+            <span className="hidden sm:inline">{t("assistFull")}</span>
           </YallahButton>
         </div>
       </div>

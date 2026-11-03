@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { YallahButton } from "@/components/molecules/button";
 import { Chip } from "@/components/molecules/chip";
 import { Sheet } from "@/components/organisms/sheet";
+import { useLocalizedProducts } from "@/hooks/use-localized-products";
 import { formatSar } from "@/lib/utils";
 import type { GiftProduct } from "@/types/gift";
 
@@ -30,87 +32,99 @@ export function AssistantSheet({
   products,
   onSelectGift,
 }: AssistantSheetProps) {
+  const t = useTranslations("AssistantSheet");
+  const localized = useLocalizedProducts(products);
   const [recipient, setRecipient] = useState("friend-f");
   const [occasion, setOccasion] = useState("congrats");
   const [budget, setBudget] = useState("lte300");
   const [seed, setSeed] = useState(0);
 
   const suggestions = useMemo(() => {
-    let list = [...products];
+    let list = [...localized];
     if (budget === "lte300") list = list.filter((p) => p.priceSar < 300);
     if (budget === "300-500")
       list = list.filter((p) => p.priceSar >= 300 && p.priceSar <= 500);
     if (budget === "gt500") list = list.filter((p) => p.priceSar > 500);
     if (recipient === "couple") list = list.filter((p) => p.serviceCount >= 2);
-    if (list.length < 3) list = [...products];
-    const rotated = [...list.slice(seed % list.length), ...list.slice(0, seed % list.length)];
+    if (list.length < 3) list = [...localized];
+    const rotated = [
+      ...list.slice(seed % list.length),
+      ...list.slice(0, seed % list.length),
+    ];
     return rotated.slice(0, 3);
-  }, [products, budget, recipient, seed]);
+  }, [localized, budget, recipient, seed]);
 
   return (
     <Sheet
       open={open}
-      title="ساعدك أختار هدية"
+      title={t("title")}
       onClose={onClose}
       placement="responsive"
       size="sm"
       className="md:max-w-[390px]"
       footer={
         <div className="flex flex-col gap-2">
-          <YallahButton fullWidth type="button" onClick={() => setSeed((s) => s + 1)}>
-            تحديث الاقتراحات
+          <YallahButton
+            fullWidth
+            type="button"
+            onClick={() => setSeed((s) => s + 1)}
+          >
+            {t("refresh")}
           </YallahButton>
-          <YallahButton fullWidth variant="secondary" type="button" onClick={onClose}>
-            إغلاق
+          <YallahButton
+            fullWidth
+            variant="secondary"
+            type="button"
+            onClick={onClose}
+          >
+            {t("close")}
           </YallahButton>
         </div>
       }
     >
       <div className="flex flex-col gap-3">
-        <p className="text-[12px] text-[#6b6659]">
-          أجب عن 3 أسئلة سريعة وسنقترح أفضل 3 هدايا.
-        </p>
+        <p className="text-[12px] text-[#6b6659]">{t("intro")}</p>
 
-        <Field label="لمن الهدية؟">
+        <Field label={t("recipient")}>
           <ChipRow
             value={recipient}
             onChange={setRecipient}
             options={[
-              { value: "friend-m", label: "صديق" },
-              { value: "friend-f", label: "صديقة" },
-              { value: "man", label: "رجل" },
-              { value: "couple", label: "زوجين" },
+              { value: "friend-m", label: t("friendM") },
+              { value: "friend-f", label: t("friendF") },
+              { value: "man", label: t("man") },
+              { value: "couple", label: t("couple") },
             ]}
           />
         </Field>
 
-        <Field label="ما المناسبة؟">
+        <Field label={t("occasion")}>
           <ChipRow
             value={occasion}
             onChange={setOccasion}
             options={[
-              { value: "congrats", label: "تهنئة" },
-              { value: "none", label: "بدون مناسبة" },
-              { value: "thanks", label: "شكر" },
-              { value: "wedding", label: "زواج" },
+              { value: "congrats", label: t("congrats") },
+              { value: "none", label: t("none") },
+              { value: "thanks", label: t("thanks") },
+              { value: "wedding", label: t("wedding") },
             ]}
           />
         </Field>
 
-        <Field label="الميزانية؟">
+        <Field label={t("budget")}>
           <ChipRow
             value={budget}
             onChange={setBudget}
             options={[
-              { value: "lte300", label: "أقل من 300" },
-              { value: "300-500", label: "300–500" },
-              { value: "gt500", label: "أكثر من 500" },
+              { value: "lte300", label: t("budgetLt300") },
+              { value: "300-500", label: t("budget300to500") },
+              { value: "gt500", label: t("budgetGt500") },
             ]}
           />
         </Field>
 
         <p className="text-[13px] font-bold text-brand-olive">
-          اقتراحاتنا لك ({suggestions.length} هدايا)
+          {t("suggestionsCount", { count: suggestions.length })}
         </p>
 
         <div className="flex flex-col gap-2">
@@ -144,7 +158,7 @@ export function AssistantSheet({
                   onClose();
                 }}
               >
-                أهدِ هذه
+                {t("selectShort")}
               </YallahButton>
             </article>
           ))}

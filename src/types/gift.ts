@@ -1,11 +1,16 @@
 export type ServicePlace = "center" | "home";
 
+export type GiftBadge = "package" | "session";
+
 export type GiftProduct = {
   id: string;
+  /** Locale-neutral structural fields; titles come from messages/Catalog. */
   title: string;
   description: string;
   priceSar: number;
-  badge?: string;
+  badge?: GiftBadge;
+  /** Resolved badge label for the active locale (optional cache). */
+  badgeLabel?: string;
   durationMinutes: number;
   serviceCount: number;
   places: ServicePlace[];

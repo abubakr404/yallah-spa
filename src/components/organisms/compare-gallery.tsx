@@ -1,220 +1,191 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import { CompareZoomImage } from "@/components/molecules/compare-zoom-image";
 import { YallahButton } from "@/components/molecules";
+import { Link } from "@/i18n/navigation";
+
+type PairMessageKey =
+  | "browseMobile"
+  | "browseDesktop"
+  | "searchMobile"
+  | "searchDesktop"
+  | "locationMobile";
+
+type SingleMessageKey =
+  | "filterDesktop"
+  | "filterMobile"
+  | "assistDesktop"
+  | "assistMobile"
+  | "personalizeDesktop"
+  | "personalizeMobile"
+  | "visitDesktop"
+  | "slotsDesktop"
+  | "visitMobile"
+  | "reviewDesktop"
+  | "reviewMobile"
+  | "successDesktop"
+  | "successMobile";
 
 type Shot = {
   src: string;
   alt: string;
   label: string;
+  tone: "before" | "after";
 };
 
-type Pair = {
+type PairDef = {
   id: string;
-  title: string;
-  subtitle: string;
+  messageKey: PairMessageKey;
   device: "mobile" | "desktop";
-  before: Shot;
-  after: Shot;
+  before: { src: string };
+  after: { src: string };
 };
 
 type JourneyShot = {
   id: string;
-  title: string;
-  step: string;
+  messageKey: SingleMessageKey;
   device: "mobile" | "desktop";
   src: string;
-  alt: string;
 };
 
-const PAIRS: Pair[] = [
+const PAIR_DEFS: PairDef[] = [
   {
     id: "mobile-browse",
-    title: "تصفّح الإهداء — موبايل",
-    subtitle: "من شاشة فارغة تعتمد على الفرع إلى هيرو وباقات وجلسات واضحة.",
+    messageKey: "browseMobile",
     device: "mobile",
     before: {
       src: "/assets/images/compare/before-mobile-gift-empty.png",
-      alt: "الشاشة القديمة لصفحة الإهداء على الموبايل",
-      label: "قبل",
     },
     after: {
       src: "/assets/images/compare/after-mobile-browse.png",
-      alt: "الشاشة الجديدة لصفحة الإهداء على الموبايل",
-      label: "بعد",
     },
   },
   {
     id: "desktop-browse",
-    title: "تصفّح الإهداء — ديسكتوب",
-    subtitle: "هيرو أوضح وكاروسيل باقات وجلسات بدل الحالة الفارغة.",
+    messageKey: "browseDesktop",
     device: "desktop",
     before: {
       src: "/assets/images/compare/before-desktop-gift-empty.png",
-      alt: "الشاشة القديمة لصفحة الإهداء على الديسكتوب",
-      label: "قبل",
     },
     after: {
       src: "/assets/images/compare/after-desktop-browse.png",
-      alt: "الشاشة الجديدة لصفحة الإهداء على الديسكتوب",
-      label: "بعد",
     },
   },
   {
     id: "mobile-search",
-    title: "بحث الهدايا — موبايل",
-    subtitle: "نتائج أوضح مع فلتر وترقيم صفحات متوافق مع RTL.",
+    messageKey: "searchMobile",
     device: "mobile",
     before: {
       src: "/assets/images/compare/before-mobile-search-list.png",
-      alt: "قائمة نتائج البحث القديمة على الموبايل",
-      label: "قبل",
     },
     after: {
       src: "/assets/images/compare/after-mobile-search.png",
-      alt: "صفحة البحث الجديدة على الموبايل",
-      label: "بعد",
     },
   },
   {
     id: "desktop-search",
-    title: "بحث الهدايا — ديسكتوب",
-    subtitle: "شبكة نتائج، فلتر، وترقيم صفحات متوافق مع العربية.",
+    messageKey: "searchDesktop",
     device: "desktop",
     before: {
       src: "/assets/images/compare/before-desktop-gift-grid.png",
-      alt: "شبكة الباقات القديمة على الديسكتوب",
-      label: "قبل",
     },
     after: {
       src: "/assets/images/compare/after-desktop-search.png",
-      alt: "صفحة البحث الجديدة على الديسكتوب",
-      label: "بعد",
     },
   },
   {
     id: "mobile-location",
-    title: "موقع المستفيد — موبايل",
-    subtitle: "قبل: مودال مواقع فوق شاشة فارغة. بعد: رحلة إهداء كاملة.",
+    messageKey: "locationMobile",
     device: "mobile",
     before: {
       src: "/assets/images/compare/before-mobile-location-modal.png",
-      alt: "مودال اختيار الموقع القديم",
-      label: "قبل",
     },
     after: {
       src: "/assets/images/compare/after-mobile-browse.png",
-      alt: "تجربة التصفّح الجديدة",
-      label: "بعد",
     },
   },
 ];
 
-const JOURNEY: JourneyShot[] = [
+const JOURNEY_DEFS: JourneyShot[] = [
   {
     id: "desktop-filter",
-    title: "تصفية الهدايا",
-    step: "بحث · ديسكتوب",
+    messageKey: "filterDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-filter.png",
-    alt: "مودال التصفية على الديسكتوب",
   },
   {
     id: "mobile-filter",
-    title: "تصفية الهدايا",
-    step: "بحث · موبايل",
+    messageKey: "filterMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-filter.png",
-    alt: "ورقة التصفية على الموبايل",
   },
   {
     id: "desktop-assistant",
-    title: "ساعدني أختار هدية",
-    step: "مساعد · ديسكتوب",
+    messageKey: "assistDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-assistant.png",
-    alt: "مساعد اختيار الهدية على الديسكتوب",
   },
   {
     id: "mobile-assistant",
-    title: "ساعدني أختار هدية",
-    step: "مساعد · موبايل",
+    messageKey: "assistMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-assistant.png",
-    alt: "مساعد اختيار الهدية على الموبايل",
   },
   {
     id: "desktop-personalize",
-    title: "خصّص هديتك",
-    step: "02 · ديسكتوب",
+    messageKey: "personalizeDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-personalize.png",
-    alt: "تخصيص الهدية على الديسكتوب",
   },
   {
     id: "mobile-personalize",
-    title: "خصّص هديتك",
-    step: "02 · موبايل",
+    messageKey: "personalizeMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-personalize.png",
-    alt: "تخصيص الهدية على الموبايل",
   },
   {
     id: "desktop-visit",
-    title: "مكان وموعد الخدمة",
-    step: "زيارة · ديسكتوب",
+    messageKey: "visitDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-visit.png",
-    alt: "اختيار الفرع واليوم على الديسكتوب",
   },
   {
     id: "desktop-visit-slots",
-    title: "الأوقات المتاحة",
-    step: "زيارة · ديسكتوب",
+    messageKey: "slotsDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-visit-slots.png",
-    alt: "اختيار الوقت على الديسكتوب",
   },
   {
     id: "mobile-visit",
-    title: "مكان وموعد الخدمة",
-    step: "زيارة · موبايل",
+    messageKey: "visitMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-visit.png",
-    alt: "اختيار المكان والموعد على الموبايل",
   },
   {
     id: "desktop-review",
-    title: "مراجعة الطلب",
-    step: "03 · ديسكتوب",
+    messageKey: "reviewDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-review.png",
-    alt: "مراجعة الطلب على الديسكتوب",
   },
   {
     id: "mobile-review",
-    title: "مراجعة الطلب",
-    step: "03 · موبايل",
+    messageKey: "reviewMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-review.png",
-    alt: "مراجعة الطلب على الموبايل",
   },
   {
     id: "desktop-success",
-    title: "تم الإهداء",
-    step: "نجاح · ديسكتوب",
+    messageKey: "successDesktop",
     device: "desktop",
     src: "/assets/images/compare/after-desktop-success.png",
-    alt: "صفحة النجاح على الديسكتوب",
   },
   {
     id: "mobile-success",
-    title: "تم الإهداء",
-    step: "نجاح · موبايل",
+    messageKey: "successMobile",
     device: "mobile",
     src: "/assets/images/compare/after-mobile-success.png",
-    alt: "صفحة النجاح على الموبايل",
   },
 ];
 
@@ -232,11 +203,11 @@ function Badge({ children, tone }: { children: string; tone: "before" | "after" 
   );
 }
 
-function ShotCard({ shot, device }: { shot: Shot; device: Pair["device"] }) {
+function ShotCard({ shot, device }: { shot: Shot; device: PairDef["device"] }) {
   const isMobile = device === "mobile";
   return (
     <figure className="flex min-w-0 flex-1 flex-col gap-3">
-      <Badge tone={shot.label.startsWith("بعد") ? "after" : "before"}>{shot.label}</Badge>
+      <Badge tone={shot.tone}>{shot.label}</Badge>
       <div
         className={
           isMobile
@@ -258,30 +229,66 @@ function ShotCard({ shot, device }: { shot: Shot; device: Pair["device"] }) {
 }
 
 export function CompareGallery() {
+  const t = useTranslations("Compare");
+
+  const beforeLabel = t("before");
+  const afterLabel = t("after");
+
+  const pairs = useMemo(
+    () =>
+      PAIR_DEFS.map((def) => ({
+        ...def,
+        title: t(`pairs.${def.messageKey}.title`),
+        subtitle: t(`pairs.${def.messageKey}.subtitle`),
+        before: {
+          src: def.before.src,
+          alt: t(`pairs.${def.messageKey}.beforeAlt`),
+          label: beforeLabel,
+          tone: "before" as const,
+        },
+        after: {
+          src: def.after.src,
+          alt: t(`pairs.${def.messageKey}.afterAlt`),
+          label: afterLabel,
+          tone: "after" as const,
+        },
+      })),
+    [t, beforeLabel, afterLabel]
+  );
+
+  const journey = useMemo(
+    () =>
+      JOURNEY_DEFS.map((def) => ({
+        ...def,
+        title: t(`singles.${def.messageKey}.title`),
+        step: t(`singles.${def.messageKey}.step`),
+        alt: t(`singles.${def.messageKey}.alt`),
+      })),
+    [t]
+  );
+
   return (
     <>
       <header className="mx-auto max-w-3xl text-center">
         <p className="text-caption font-medium tracking-wide text-brand-olive">
-          Before / After · Full Journey
+          {t("eyebrow")}
         </p>
-        <h1 className="mt-3 text-display sm:text-4xl sm:leading-[1.25]">
-          مقارنة إعادة تصميم صفحة الإهداء
-        </h1>
+        <h1 className="mt-3 text-display sm:text-4xl sm:leading-[1.25]">{t("pageTitle")}</h1>
         <p className="mt-3 text-body text-text-secondary sm:text-[15px] sm:leading-7">
-          اضغط أي صورة للتكبير والتقريب. لقطات حية من الموقع القديم مقابل الرحلة الجديدة كاملة.
+          {t("pageSubtitle")}
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <YallahButton asChild>
-            <Link href="/gifts">جرّب الرحلة الجديدة</Link>
+            <Link href="/gifts">{t("tryJourney")}</Link>
           </YallahButton>
           <YallahButton variant="secondary" asChild>
-            <Link href="/">العودة للترحيب</Link>
+            <Link href="/">{t("backWelcome")}</Link>
           </YallahButton>
         </div>
       </header>
 
       <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
-        {PAIRS.map((pair, index) => (
+        {pairs.map((pair, index) => (
           <section
             key={pair.id}
             id={pair.id}
@@ -291,15 +298,15 @@ export function CompareGallery() {
               <div className="text-start">
                 <p className="text-badge text-brand-sand">
                   {String(index + 1).padStart(2, "0")} ·{" "}
-                  {pair.device === "mobile" ? "موبايل" : "ديسكتوب"}
+                  {pair.device === "mobile" ? t("mobile") : t("desktop")}
                 </p>
                 <h2 className="mt-1 text-section text-text-primary">{pair.title}</h2>
                 <p className="mt-1 max-w-2xl text-body-sm text-text-secondary">{pair.subtitle}</p>
               </div>
               <div className="flex items-center gap-2" aria-hidden>
-                <Badge tone="before">قبل</Badge>
+                <Badge tone="before">{beforeLabel}</Badge>
                 <span className="text-brand-olive">←</span>
-                <Badge tone="after">بعد</Badge>
+                <Badge tone="after">{afterLabel}</Badge>
               </div>
             </div>
 
@@ -319,15 +326,13 @@ export function CompareGallery() {
 
       <section className="mt-20 scroll-mt-24" id="journey">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-badge text-brand-sand">الرحلة الجديدة كاملة</p>
-          <h2 className="mt-2 text-section text-text-primary">من البحث حتى النجاح</h2>
-          <p className="mt-2 text-body-sm text-text-secondary">
-            فلتر، مساعد، تخصيص، زيارة، مراجعة، ونجاح — اضغط للتكبير.
-          </p>
+          <p className="text-badge text-brand-sand">{t("journeyEyebrow")}</p>
+          <h2 className="mt-2 text-section text-text-primary">{t("journeyTitle")}</h2>
+          <p className="mt-2 text-body-sm text-text-secondary">{t("journeySubtitle")}</p>
         </div>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
-          {JOURNEY.map((shot) => {
+          {journey.map((shot) => {
             const isMobile = shot.device === "mobile";
             return (
               <figure
@@ -340,7 +345,7 @@ export function CompareGallery() {
                     <p className="text-badge text-brand-sand">{shot.step}</p>
                     <h3 className="text-card-title text-text-primary">{shot.title}</h3>
                   </div>
-                  <Badge tone="after">بعد</Badge>
+                  <Badge tone="after">{afterLabel}</Badge>
                 </div>
                 <div
                   className={
@@ -371,13 +376,11 @@ export function CompareGallery() {
       </section>
 
       <aside className="mt-16 rounded-[24px] border border-dashed border-brand-olive/30 bg-brand-olive/[0.04] p-6 text-center sm:p-8">
-        <p className="text-card-title text-brand-olive">نفس الاختبار · نتيجة أوضح</p>
-        <p className="mx-auto mt-2 max-w-xl text-body-sm text-text-secondary">
-          المقارنة أيضاً في Figma — صفحة Before / After.
-        </p>
+        <p className="text-card-title text-brand-olive">{t("asideTitle")}</p>
+        <p className="mx-auto mt-2 max-w-xl text-body-sm text-text-secondary">{t("asideBody")}</p>
         <div className="mt-5">
           <YallahButton asChild>
-            <Link href="/gifts">ابدأ من صفحة الإهداء</Link>
+            <Link href="/gifts">{t("startGifts")}</Link>
           </YallahButton>
         </div>
       </aside>

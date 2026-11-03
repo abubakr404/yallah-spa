@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Divider } from "@/components/atoms/divider";
 import { Tag } from "@/components/atoms/tag";
 import { YallahButton } from "@/components/molecules/button";
@@ -20,7 +21,17 @@ export function GiftProductCard({
   className,
   onGift,
 }: GiftProductCardProps) {
-  const branchLabel = `متوفرة في ${product.branchCount} فروع`;
+  const t = useTranslations("GiftCard");
+  const tCommon = useTranslations("Common");
+  const tPlaces = useTranslations("Places");
+  const tBadges = useTranslations("Badges");
+
+  const badgeText =
+    product.badgeLabel ??
+    (product.badge ? tBadges(product.badge) : undefined);
+  const branchLabel = tCommon("branchesAvailable", {
+    count: product.branchCount,
+  });
   const showServices = product.serviceCount >= 2;
 
   return (
@@ -39,9 +50,9 @@ export function GiftProductCard({
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 [-webkit-user-drag:none]"
           sizes="305px"
         />
-        {product.badge ? (
+        {badgeText ? (
           <div className="absolute start-3 top-3">
-            <Tag variant="package">{product.badge}</Tag>
+            <Tag variant="package">{badgeText}</Tag>
           </div>
         ) : null}
       </div>
@@ -63,10 +74,10 @@ export function GiftProductCard({
 
         <div className="flex flex-wrap justify-start gap-2">
           {product.places.includes("center") ? (
-            <Tag variant="center">في المركز</Tag>
+            <Tag variant="center">{tPlaces("center")}</Tag>
           ) : null}
           {product.places.includes("home") ? (
-            <Tag variant="home">زيارة منزلية</Tag>
+            <Tag variant="home">{tPlaces("home")}</Tag>
           ) : null}
         </div>
 
@@ -74,11 +85,14 @@ export function GiftProductCard({
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <MetaRow icon="clock" label={`${product.durationMinutes} دقيقة`} />
+            <MetaRow
+              icon="clock"
+              label={tCommon("minutes", { count: product.durationMinutes })}
+            />
             {showServices ? (
               <MetaRow
                 icon="services"
-                label={`${product.serviceCount} خدمات`}
+                label={tCommon("services", { count: product.serviceCount })}
                 tone="strong"
               />
             ) : null}
@@ -92,7 +106,7 @@ export function GiftProductCard({
           className="py-3"
           onClick={() => onGift?.(product.id)}
         >
-          أهدِ هذه الباقة
+          {t("giftCta")}
         </YallahButton>
       </div>
     </article>

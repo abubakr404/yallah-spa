@@ -1,0 +1,567 @@
+{
+  "Metadata": {
+    "titleDefault": "Yallah Spa | Gift spa sessions & packages",
+    "titleTemplate": "%s | Yallah Spa",
+    "description": "Gift a memorable spa experience: browse packages and sessions, personalize the gift card, and choose branch and time — Arabic-first with full RTL support."
+  },
+  "Common": {
+    "brand": "Yallah Spa",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "apply": "Apply",
+    "clear": "Clear",
+    "loading": "Loading…",
+    "all": "All",
+    "gift": "Gift",
+    "minutes": "{count} min",
+    "services": "{count} services",
+    "branchesAvailable": "Available at {count} branches",
+    "branchNamed": "{name} branch",
+    "viewAll": "View all",
+    "currencySar": "SAR {amount}",
+    "language": "Language",
+    "switchToEn": "English",
+    "switchToAr": "العربية"
+  },
+  "Nav": {
+    "mainAria": "Main navigation",
+    "mobileAria": "Mobile navigation",
+    "home": "Home",
+    "start": "Start",
+    "services": "Services",
+    "gifts": "Gifts",
+    "packages": "Packages",
+    "spa": "Spa center",
+    "about": "About",
+    "designSystem": "Design system",
+    "compare": "Before / After"
+  },
+  "Stepper": {
+    "aria": "Gift journey steps",
+    "choose": "Choose",
+    "personalize": "Personalize",
+    "review": "Review cart"
+  },
+  "Places": {
+    "center": "At the center",
+    "home": "Home visit",
+    "homeShort": "Home"
+  },
+  "Badges": {
+    "package": "Package",
+    "session": "Session",
+    "gift": "Gift"
+  },
+  "Branches": {
+    "all": "All branches",
+    "makkah": "Makkah",
+    "jeddah": "Jeddah",
+    "riyadh": "Riyadh",
+    "yasmin": "Al Yasmin",
+    "nakhil": "Al Nakhil",
+    "riyadhPark": "Riyadh Park",
+    "malqa": "Al Malqa"
+  },
+  "Welcome": {
+    "eyebrow": "Interview Test · Yallah Spa Gift Redesign",
+    "hello": "Hello — I'm {name}",
+    "ctaGift": "Start the gift journey",
+    "ctaCompare": "Before / After",
+    "ctaDesignSystem": "Design system",
+    "panelTitle": "Gift page redesign",
+    "panelCaption": "Option A · Optional branch · 3-step journey · Desktop + Mobile · RTL",
+    "readyLabel": "Ready to try",
+    "readyBody": "Choose → Personalize → Review cart — the gift journey is wired to the design system and mock API layer.",
+    "highlights": {
+      "0": "Design system from Figma → reusable components",
+      "1": "Professional API layer with mock data ready for a real backend",
+      "2": "RTL-first with Tajawal and Yallah Spa tokens"
+    },
+    "summary": "Hi, I'm Abubakr — a frontend engineer. This interview test rebuilds Yallah Spa's gift experience with Atomic Design, Next.js, Tailwind, and shadcn."
+  },
+  "GiftHero": {
+    "title": "Gift someone a moment of calm",
+    "subtitle": "Pick a special gift, personalize the card, and share it with someone you love.",
+    "searchCta": "Search gifts",
+    "assistShort": "Help me choose",
+    "assistFull": "Help me choose a gift"
+  },
+  "GiftsBrowse": {
+    "packagesTitle": "Packages ready to gift",
+    "packagesSubtitle": "Complete experiences you can gift right away",
+    "sessionsTitle": "Suggested sessions to gift",
+    "sessionsSubtitle": "Single sessions that make a quick thoughtful gift"
+  },
+  "GiftCard": {
+    "giftCta": "Gift this package"
+  },
+  "GiftsSearch": {
+    "title": "Search for a gift",
+    "subtitle": "Filter by type or search by keyword.",
+    "queryLabel": "Search keyword",
+    "queryPlaceholder": "e.g. massage, care, package…",
+    "typeLabel": "Type",
+    "packages": "Packages",
+    "sessions": "Sessions",
+    "filter": "Filter",
+    "resultsTitle": "Search results",
+    "noResults": "No results",
+    "noResultsBody": "No results for this search.",
+    "showing": "Showing {start}–{end} of {total} gifts",
+    "paginationAria": "Pagination",
+    "pageAria": "Page {n}",
+    "filterCta": "Filter"
+  },
+  "GiftsFooter": {
+    "tagline": "Yallah Spa — gift calm to someone you love",
+    "legal": "Privacy · Terms"
+  },
+  "FilterSheet": {
+    "title": "Filter gifts",
+    "clear": "Clear",
+    "apply": "Apply filters",
+    "giftType": "Gift type",
+    "packages": "Packages",
+    "sessions": "Sessions",
+    "branch": "Branch / recipient location",
+    "branchAria": "Branch",
+    "place": "Service place",
+    "serviceType": "Service type",
+    "massage": "Massage",
+    "bath": "Bath",
+    "skin": "Skin",
+    "pedi": "Pedicure",
+    "budget": "Budget",
+    "budgetAny": "All",
+    "budgetLt300": "Under 300",
+    "budget300to500": "300–500",
+    "budgetGt500": "Over 500"
+  },
+  "AssistantSheet": {
+    "title": "Help me choose a gift",
+    "intro": "Answer 3 quick questions and we’ll suggest the best 3 gifts.",
+    "refresh": "Refresh suggestions",
+    "close": "Close",
+    "recipient": "Who is the gift for?",
+    "friendM": "Friend (m)",
+    "friendF": "Friend (f)",
+    "man": "Man",
+    "couple": "Couple",
+    "occasion": "What’s the occasion?",
+    "congrats": "Congratulations",
+    "none": "No occasion",
+    "thanks": "Thank you",
+    "wedding": "Wedding",
+    "budget": "Budget?",
+    "budgetLt300": "Under 300",
+    "budget300to500": "300–500",
+    "budgetGt500": "Over 500",
+    "suggestions": "Suggestions for you",
+    "selectGift": "Choose this gift",
+    "selectShort": "Gift this",
+    "suggestionsCount": "Suggestions for you ({count} gifts)"
+  },
+  "VisitSheet": {
+    "title": "Service place & time",
+    "confirm": "Confirm place & time",
+    "hint": "Choose the place, branch, then day and time",
+    "duration": "Duration: {count} min",
+    "placeTitle": "Service place *",
+    "placeHint": "Choose where the service is delivered: at the center or as a home visit.",
+    "branchTitle": "Branch *",
+    "branchAria": "Choose branch",
+    "appointmentTitle": "Day & time *",
+    "errorRequired": "Choose a day and time to continue.",
+    "defaultService": "Gift service",
+    "branchPickTitle": "Choose branch *",
+    "branchPickHint": "Required — choose the branch where the service will be delivered."
+  },
+  "Appointment": {
+    "nextMonth": "Next month",
+    "prevMonth": "Previous month",
+    "weekdays": {
+      "0": "Sat",
+      "1": "Fri",
+      "2": "Thu",
+      "3": "Wed",
+      "4": "Tue",
+      "5": "Mon",
+      "6": "Sun"
+    },
+    "months": {
+      "0": "January",
+      "1": "February",
+      "2": "March",
+      "3": "April",
+      "4": "May",
+      "5": "June",
+      "6": "July",
+      "7": "August",
+      "8": "September",
+      "9": "October",
+      "10": "November",
+      "11": "December"
+    },
+    "times": {
+      "t0": "10:00 AM",
+      "t1": "11:30 AM",
+      "t2": "1:00 PM",
+      "t3": "3:30 PM",
+      "t4": "5:00 PM",
+      "t5": "7:30 PM",
+      "t6": "9:00 PM"
+    }
+  },
+  "Personalize": {
+    "title": "Personalize your gift",
+    "subtitle": "Add names and a message, pick a card theme, and set the visit.",
+    "assist": "Help me choose a gift",
+    "recipientLabel": "Recipient name *",
+    "recipientPlaceholder": "Who will receive the gift",
+    "senderLabel": "Sender name *",
+    "senderPlaceholder": "Your name as it appears on the card",
+    "messageLabel": "Card message",
+    "messagePlaceholder": "Wishing you moments filled with calm…",
+    "themeLabel": "Card theme",
+    "visitLabel": "Service place & time *",
+    "visitEmpty": "Set place and time",
+    "visitEdit": "Edit visit",
+    "continue": "Continue to review",
+    "errorRecipient": "Enter the recipient’s name.",
+    "errorSender": "Enter the sender’s name.",
+    "errorVisit": "Set the service place and time.",
+    "changeGift": "Change gift",
+    "visitRequiredHint": "Required — choose place, branch, and time now.",
+    "setDetails": "Set details",
+    "visitSummaryHint": "Place, branch, and time",
+    "visitNotSet": "Not set yet — tap to set details",
+    "recipientSection": "Recipient details",
+    "senderSection": "Sender details",
+    "messageSection": "Write a heartfelt message",
+    "messageOptional": "Gift message (optional)",
+    "messageHint": "You can edit the text · ideally up to ≈ 120 characters",
+    "themeSection": "Choose a card design",
+    "previewLive": "Live card preview",
+    "back": "Back"
+  },
+  "Review": {
+    "loading": "Loading gift cart…",
+    "title": "Review order",
+    "subtitle": "A gift service is in your cart — review the details, then confirm.",
+    "removeAria": "Remove from cart",
+    "appointment": "Appointment: {slot}",
+    "toFrom": "To {recipient} · From {sender}",
+    "editPersonalize": "Edit personalization",
+    "terms": "By completing the order you agree to the terms and conditions",
+    "errorTerms": "Accept the terms and conditions to complete the order.",
+    "errorGeneric": "Could not complete the order."
+  },
+  "OrderSummary": {
+    "title": "Booking summary",
+    "subtitle": "Service cart summary before checkout",
+    "serviceCount": "Services",
+    "giftCount": "Of which gifts",
+    "directBookings": "Direct bookings",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "total": "Total",
+    "noFees": "No extra cart fees",
+    "confirm": "Complete order",
+    "confirming": "Completing order…",
+    "addMore": "Add more"
+  },
+  "Success": {
+    "loading": "Loading order confirmation…",
+    "badge": "Order completed · {orderId}",
+    "title": "Your gift is ready to share",
+    "subtitle": "Download the card or copy the gift link to share with the recipient.",
+    "instructionsTitle": "Instructions for the recipient",
+    "step1": "1) Open the gift link or scan the QR code",
+    "step2": "2) Review the pre-selected branch and appointment",
+    "step3": "3) Show the card at the branch at the scheduled time",
+    "download": "Download card",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "share": "Share link",
+    "shareTitle": "Yallah Spa gift",
+    "shareText": "A special gift for {name}",
+    "another": "Gift another"
+  },
+  "Compare": {
+    "title": "Before / After",
+    "subtitle": "Compare the old gift journey with the redesigned experience — click any image to zoom.",
+    "before": "Before",
+    "after": "After",
+    "mobile": "Mobile",
+    "desktop": "Desktop",
+    "zoomAria": "Zoom image: {alt}",
+    "pairs": {
+      "browseMobile": {
+        "title": "Gift browse — Mobile",
+        "subtitle": "From an empty branch-gated screen to a clear hero, packages, and sessions.",
+        "beforeAlt": "Old gift browse screen on mobile",
+        "afterAlt": "New gift browse screen on mobile"
+      },
+      "browseDesktop": {
+        "title": "Gift browse — Desktop",
+        "subtitle": "Clearer hero and package/session carousels instead of an empty state.",
+        "beforeAlt": "Old gift browse screen on desktop",
+        "afterAlt": "New gift browse screen on desktop"
+      },
+      "searchMobile": {
+        "title": "Gift search — Mobile",
+        "subtitle": "Clearer results with filters and RTL-friendly pagination.",
+        "beforeAlt": "Old search results list on mobile",
+        "afterAlt": "New search page on mobile"
+      },
+      "searchDesktop": {
+        "title": "Gift search — Desktop",
+        "subtitle": "Results grid, filters, and Arabic-friendly pagination.",
+        "beforeAlt": "Old packages grid on desktop",
+        "afterAlt": "New search page on desktop"
+      },
+      "locationMobile": {
+        "title": "Recipient location — Mobile",
+        "subtitle": "Before: location modal over an empty screen. After: a full gift journey.",
+        "beforeAlt": "Old location selection modal",
+        "afterAlt": "New browse experience"
+      }
+    },
+    "singles": {
+      "filterDesktop": {
+        "title": "Filter gifts",
+        "step": "Search · Desktop",
+        "alt": "Filter modal on desktop"
+      },
+      "filterMobile": {
+        "title": "Filter gifts",
+        "step": "Search · Mobile",
+        "alt": "Filter sheet on mobile"
+      },
+      "assistDesktop": {
+        "title": "Help me choose a gift",
+        "step": "Assistant · Desktop",
+        "alt": "Gift assistant on desktop"
+      },
+      "assistMobile": {
+        "title": "Help me choose a gift",
+        "step": "Assistant · Mobile",
+        "alt": "Gift assistant on mobile"
+      },
+      "personalizeDesktop": {
+        "title": "Personalize your gift",
+        "step": "Personalize · Desktop",
+        "alt": "Gift personalization on desktop"
+      },
+      "personalizeMobile": {
+        "title": "Personalize your gift",
+        "step": "Personalize · Mobile",
+        "alt": "Gift personalization on mobile"
+      },
+      "visitDesktop": {
+        "title": "Service place & time",
+        "step": "Visit · Desktop",
+        "alt": "Branch and day selection on desktop"
+      },
+      "slotsDesktop": {
+        "title": "Available times",
+        "step": "Visit · Desktop",
+        "alt": "Time selection on desktop"
+      },
+      "visitMobile": {
+        "title": "Service place & time",
+        "step": "Visit · Mobile",
+        "alt": "Place and time selection on mobile"
+      },
+      "reviewDesktop": {
+        "title": "Review order",
+        "step": "Review · Desktop",
+        "alt": "Order review on desktop"
+      },
+      "reviewMobile": {
+        "title": "Review order",
+        "step": "Review · Mobile",
+        "alt": "Order review on mobile"
+      },
+      "successDesktop": {
+        "title": "Gift sent",
+        "step": "Success · Desktop",
+        "alt": "Success page on desktop"
+      },
+      "successMobile": {
+        "title": "Gift sent",
+        "step": "Success · Mobile",
+        "alt": "Success page on mobile"
+      }
+    },
+    "eyebrow": "Before / After · Full Journey",
+    "pageTitle": "Gift page redesign comparison",
+    "pageSubtitle": "Click any image to zoom. Live shots of the old site versus the full new journey.",
+    "tryJourney": "Try the new journey",
+    "backWelcome": "Back to welcome",
+    "journeyEyebrow": "The full new journey",
+    "journeyTitle": "From search to success",
+    "journeySubtitle": "Filter, assistant, personalize, visit, review, and success — click to zoom.",
+    "asideTitle": "Same brief · clearer result",
+    "asideBody": "The comparison is also in Figma — Before / After page.",
+    "startGifts": "Start from the gifts page"
+  },
+  "DesignSystem": {
+    "title": "Design system · Yallah Spa",
+    "foundations": "Foundations",
+    "foundationsDesc": "Color tokens and radii — aligned with latest Figma values",
+    "atoms": "Atoms",
+    "atomsDesc": "Icons, tags, indicators, logo",
+    "molecules": "Molecules",
+    "moleculesDesc": "Buttons + custom controls matching Figma (not default shadcn)",
+    "organisms": "Organisms",
+    "organismsDesc": "Headers without radius · Figma stepper · cards · carousel · sheet"
+  },
+  "Catalog": {
+    "gift-men-premium": {
+      "title": "Men’s premium package",
+      "description": "Massage, care, and relaxation in one package."
+    },
+    "gift-relax-full": {
+      "title": "Full relaxation package",
+      "description": "A complete experience of calm and care."
+    },
+    "gift-duo": {
+      "title": "Quiet duo package",
+      "description": "A shared relaxation experience for two."
+    },
+    "gift-home-care": {
+      "title": "Premium home care",
+      "description": "A care package delivered comfortably at home."
+    },
+    "gift-skin-pack": {
+      "title": "Skin care package",
+      "description": "Glow and freshness in a complete care ritual."
+    },
+    "gift-royal": {
+      "title": "Quiet royal package",
+      "description": "A luxury experience of massage, bath, and care."
+    },
+    "gift-mom": {
+      "title": "Beloved mother package",
+      "description": "Gentle care for moments of appreciation."
+    },
+    "gift-detox": {
+      "title": "Detox & balance package",
+      "description": "Massage and detox to restore energy calmly."
+    },
+    "gift-aromatic": {
+      "title": "Aromatic oil relaxation massage",
+      "description": "A soothing session with natural aromatic oils."
+    },
+    "gift-home-massage": {
+      "title": "Luxury home massage",
+      "description": "A relaxation session that comes to the recipient’s home."
+    },
+    "gift-stone": {
+      "title": "Luxury stone massage",
+      "description": "Hot stones for deep muscle release."
+    },
+    "gift-facial": {
+      "title": "Radiant skin care",
+      "description": "A refreshing facial that leaves a natural glow."
+    },
+    "gift-swedish": {
+      "title": "Classic Swedish massage",
+      "description": "Traditional massage to ease tension and improve circulation."
+    },
+    "gift-foot": {
+      "title": "Comforting foot massage",
+      "description": "A short session for instant foot relief."
+    },
+    "gift-head": {
+      "title": "Scalp massage",
+      "description": "Mental calm through a gentle scalp massage."
+    },
+    "gift-aromatherapy": {
+      "title": "Soothing aromatherapy session",
+      "description": "Inhalation and aromatic oils to restore calm."
+    }
+  },
+  "MessagePresets": {
+    "default": {
+      "label": "General message",
+      "text": "Wishing you moments filled with calm and relaxation — a gift from the heart, with love."
+    },
+    "birthday": {
+      "label": "Happy birthday",
+      "text": "Happy birthday — wishing you moments filled with calm and relaxation."
+    },
+    "thanks": {
+      "label": "Thank you",
+      "text": "Thank you from the heart — may this gift give you the rest you deserve."
+    },
+    "relax": {
+      "label": "Take a breath",
+      "text": "Take a breath… this is an invitation to calm the body and restore balance."
+    },
+    "success": {
+      "label": "Congrats",
+      "text": "Congratulations! Celebrate with a moment of calm you deserve."
+    }
+  },
+  "CardThemes": {
+    "olive": "Olive",
+    "gold": "Gold",
+    "floral": "Floral"
+  },
+  "Seo": {
+    "siteName": "Yallah Spa",
+    "titleDefault": "Yallah Spa | Gift spa sessions & packages",
+    "titleTemplate": "%s | Yallah Spa",
+    "description": "Gift a memorable spa experience: browse packages and sessions, personalize the gift card, and choose branch and time — Arabic-first with full RTL support.",
+    "keywords": "Yallah Spa, spa gift, massage gift, spa packages, relaxation sessions, gift card, Saudi spa, home massage",
+    "ogImageAlt": "Yallah Spa — gift spa sessions and packages",
+    "pages": {
+      "home": {
+        "title": "Yallah Spa | Gift experience redesign",
+        "description": "Welcome to the Yallah Spa gift page redesign: a clear journey from choosing a gift to sharing it, with Arabic RTL and a responsive UI.",
+        "keywords": "Yallah Spa, redesign, gift UX, RTL"
+      },
+      "gifts": {
+        "title": "Choose a spa gift",
+        "description": "Browse Yallah Spa packages and sessions ready to gift. Pick an experience, personalize the card, and share it.",
+        "keywords": "spa gifts, spa packages, massage sessions, Yallah Spa gift"
+      },
+      "giftsSearch": {
+        "title": "Search spa gifts",
+        "description": "Search and filter Yallah Spa packages and sessions by type, place, and budget to find the right gift faster.",
+        "keywords": "search spa gifts, filter packages, spa sessions"
+      },
+      "giftsPersonalize": {
+        "title": "Personalize your gift",
+        "description": "Add recipient and sender names, write a personal message, and choose card design plus visit place and time.",
+        "keywords": "personalize gift, gift card, spa gift message"
+      },
+      "giftsReview": {
+        "title": "Review gift order",
+        "description": "Review Yallah Spa gift details, pricing, and tax before completing the order.",
+        "keywords": "review order, spa gift cart"
+      },
+      "giftsSuccess": {
+        "title": "Gift completed",
+        "description": "Your gift is ready to share. Download the card or copy the link for the recipient.",
+        "keywords": "gift confirmation, share spa gift"
+      },
+      "compare": {
+        "title": "Before & after — gift page redesign",
+        "description": "Compare the old Yallah Spa gift experience with the redesigned journey on mobile and desktop.",
+        "keywords": "before after, UX comparison, Yallah Spa redesign"
+      },
+      "designSystem": {
+        "title": "Design system",
+        "description": "Yallah Spa foundations and components: colors, atoms, molecules, and organisms aligned with Figma.",
+        "keywords": "design system, Yallah Spa UI"
+      }
+    }
+  }
+}

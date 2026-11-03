@@ -1,5 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type LogoProps = {
@@ -9,10 +12,13 @@ type LogoProps = {
 };
 
 export function Logo({ className, href = "/", priority }: LogoProps) {
+  const t = useTranslations("Common");
+  const brand = t("brand");
+
   const mark = (
     <Image
       src="/assets/images/yallah-logo.png"
-      alt="Yallah Spa"
+      alt={brand}
       width={160}
       height={56}
       priority={priority}
@@ -23,7 +29,7 @@ export function Logo({ className, href = "/", priority }: LogoProps) {
   if (href === null) return mark;
 
   return (
-    <Link href={href} className="inline-flex" aria-label="Yallah Spa — الصفحة الرئيسية">
+    <Link href={href} className="inline-flex" aria-label={brand}>
       {mark}
     </Link>
   );

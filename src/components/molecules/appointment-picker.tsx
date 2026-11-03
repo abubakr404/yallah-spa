@@ -1,36 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/atoms/icon";
 import { cn } from "@/lib/utils";
 
-/** Figma calendar: Saturday → Sunday, left → right (dir=ltr on grid). */
-const WEEKDAYS = ["سبت", "جمع", "خمي", "أرب", "ثلا", "إثن", "أحد"] as const;
-
-const DEFAULT_TIMES = [
-  "10:00 ص",
-  "11:30 ص",
-  "1:00 م",
-  "3:30 م",
-  "5:00 م",
-  "7:30 م",
-  "9:00 م",
-];
-
-const MONTHS_AR = [
-  "يناير",
-  "فبراير",
-  "مارس",
-  "أبريل",
-  "مايو",
-  "يونيو",
-  "يوليو",
-  "أغسطس",
-  "سبتمبر",
-  "أكتوبر",
-  "نوفمبر",
-  "ديسمبر",
-];
+const TIME_KEYS = ["t0", "t1", "t2", "t3", "t4", "t5", "t6"] as const;
 
 /** JS getDay() 0=Sun … 6=Sat → Saturday-first column index. */
 function saturdayFirstIndex(jsDay: number) {
@@ -56,16 +31,31 @@ type AppointmentPickerProps = {
 export function AppointmentPicker({
   value,
   onChange,
-  times = DEFAULT_TIMES,
+  times,
   className,
 }: AppointmentPickerProps) {
+  const t = useTranslations("Appointment");
+
+  const defaultTimes = useMemo(
+    () => TIME_KEYS.map((key) => t(`times.${key}`)),
+    [t]
+  );
+  const resolvedTimes = times ?? defaultTimes;
+
+  const weekdays = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => t(`weekdays.${i}`)),
+    [t]
+  );
+
+  const monthName = (monthIndex: number) => t(`months.${monthIndex}`);
+
   const initial = value?.date ?? new Date(2026, 10, 3);
   const [cursor, setCursor] = useState(
     () => new Date(initial.getFullYear(), initial.getMonth(), 1)
   );
   const [selectedDay, setSelectedDay] = useState(initial.getDate());
   const [selectedTime, setSelectedTime] = useState(
-    value?.timeLabel ?? "11:30 ص"
+    value?.timeLabel ?? resolvedTimes[1] ?? resolvedTimes[0]
   );
 
   const year = cursor.getFullYear();
@@ -80,14 +70,14 @@ export function AppointmentPicker({
   }, [daysInMonth, startCol]);
 
   const weekdayLabel = (day: number) =>
-    WEEKDAYS[saturdayFirstIndex(new Date(year, month, day).getDay())];
+    weekdays[saturdayFirstIndex(new Date(year, month, day).getDay())];
 
   const emit = (day: number, time: string) => {
     const date = new Date(year, month, day);
     onChange?.({
       date,
       timeLabel: time,
-      dayLabel: `${weekdayLabel(day)} ${day} ${MONTHS_AR[month]} ${year}`,
+      dayLabel: `${weekdayLabel(day)} ${day} ${monthName(month)} ${year}`,
     });
   };
 
@@ -108,22 +98,21 @@ export function AppointmentPicker({
 
   return (
     <div className={cn("flex w-full flex-col gap-3 text-start", className)}>
-      {/* LTR header matches Figma: < next on left, > prev on right */}
       <div dir="ltr" className="flex items-center justify-between">
         <button
           type="button"
-          aria-label="الشهر التالي"
+          aria-label={t("nextMonth")}
           className="inline-flex size-8 cursor-pointer items-center justify-center text-text-primary"
           onClick={() => setCursor(new Date(year, month + 1, 1))}
         >
           <Icon name="chevron-left" size={14} />
         </button>
         <p className="text-[15px] font-bold text-text-primary" dir="rtl">
-          {MONTHS_AR[month]} {year}
+          {monthName(month)} {year}
         </p>
         <button
           type="button"
-          aria-label="الشهر السابق"
+          aria-label={t("prevMonth")}
           className="inline-flex size-8 cursor-pointer items-center justify-center text-text-primary"
           onClick={() => setCursor(new Date(year, month - 1, 1))}
         >
@@ -131,9 +120,8 @@ export function AppointmentPicker({
         </button>
       </div>
 
-      {/* LTR so day numbers run 1→… left-to-right under سبت…أحد as in Figma */}
       <div dir="ltr" className="grid grid-cols-7 gap-1">
-        {WEEKDAYS.map((d) => (
+        {weekdays.map((d) => (
           <div
             key={d}
             className="flex h-6 items-center justify-center text-[11px] font-medium text-[#736e61]"
@@ -163,13 +151,13 @@ export function AppointmentPicker({
       </div>
 
       <p className="text-[13px] font-medium text-brand-olive">
-        اليوم المحدد: {weekdayLabel(selectedDay)} {selectedDay}{" "}
-        {MONTHS_AR[month]} {year}
+        اليوم المحدد: {weekdayLabel(selectedDay)} {selectedDay} {monthName(month)}{" "}
+        {year}
       </p>
 
       <p className="text-sm font-bold text-text-primary">الأوقات المتاحة</p>
       <div className="flex flex-wrap gap-2">
-        {times.map((time) => {
+        {resolvedTimes.map((time) => {
           const active = selectedTime === time;
           return (
             <button

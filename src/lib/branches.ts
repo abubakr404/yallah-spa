@@ -1,11 +1,13 @@
-/** Cities shown in branch pickers across the gift journey. */
+/** Cities shown in branch pickers across the gift journey (labels via `Branches`). */
 export const BRANCH_CITY_OPTIONS = [
-  { value: "makkah", label: "مكة" },
-  { value: "jeddah", label: "جدة" },
-  { value: "riyadh", label: "الرياض" },
+  { value: "makkah" },
+  { value: "jeddah" },
+  { value: "riyadh" },
 ] as const;
 
-export const BRANCH_CITY_OPTIONS_WITH_ALL = [
-  { value: "all", label: "كل الفروع" },
-  ...BRANCH_CITY_OPTIONS,
+export const BRANCH_CITY_OPTION_VALUES = [
+  "all",
+  ...BRANCH_CITY_OPTIONS.map((b) => b.value),
 ] as const;
+
+export type BranchCityValue = (typeof BRANCH_CITY_OPTIONS)[number]["value"];
