@@ -19,7 +19,7 @@ export function ActionTile({
     <button
       type="button"
       className={cn(
-        "inline-flex flex-col items-center gap-2 text-badge text-brand-olive outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-brand-olive-soft/40",
+        "inline-flex cursor-pointer flex-col items-center gap-2 text-badge text-brand-olive outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-brand-olive-soft/40",
         className
       )}
       {...props}

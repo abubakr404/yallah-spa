@@ -146,7 +146,7 @@ function IconAction({
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-col items-center gap-2 text-brand-olive outline-none"
+      className="flex cursor-pointer flex-col items-center gap-2 text-brand-olive outline-none"
     >
       <span className="inline-flex size-14 items-center justify-center rounded-2xl border border-border-subtle bg-bg-muted">
         <Icon name={icon} size={22} />

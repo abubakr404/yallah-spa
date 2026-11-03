@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Icon } from "@/components/atoms/icon";
 import { YallahButton } from "@/components/molecules/button";
 import { AssistantSheet } from "@/components/organisms/assistant-sheet";
 import { GiftHero } from "@/components/organisms/gift-hero";
@@ -110,8 +111,13 @@ function CarouselSection({
           </h2>
           <p className="text-[13px] leading-[19px] text-[#615c52]">{subtitle}</p>
         </div>
-        <YallahButton variant="text" asChild>
-          <Link href={href}>عرض الكل</Link>
+        <YallahButton variant="text" asChild className="gap-1">
+          <Link href={href} aria-label="عرض الكل">
+            <span className="hidden text-[14px] font-medium sm:inline">
+              عرض الكل
+            </span>
+            <Icon name="chevron-left" size={16} className="shrink-0" />
+          </Link>
         </YallahButton>
       </div>
       {children}

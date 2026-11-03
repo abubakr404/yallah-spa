@@ -48,7 +48,8 @@ export function SiteHeader({ className, variant }: SiteHeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 rounded-none border-0 border-b border-border-subtle bg-bg-surface",
+        // Figma chrome: square corners + visible bottom hairline (same as DS frame)
+        "sticky top-0 z-40 rounded-none border-b border-border-subtle bg-bg-surface",
         className
       )}
     >

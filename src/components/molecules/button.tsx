@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * أساسي | ثانوي | شبح | نص
  */
 const yallahButtonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap text-button transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-olive-soft/40 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex cursor-pointer items-center justify-center whitespace-nowrap text-button transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-olive-soft/40 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -20,7 +20,7 @@ const yallahButtonVariants = cva(
           "rounded-full border border-border-subtle bg-bg-muted px-[22px] py-3 text-brand-olive hover:bg-[#e8e2d4]",
         ghost:
           "rounded-full border-[1.5px] border-white bg-brand-olive px-[22px] py-3 text-text-inverse hover:bg-brand-olive-soft",
-        text: "rounded-none bg-transparent px-0 py-0 text-brand-olive underline underline-offset-4 hover:text-brand-olive-soft",
+        text: "rounded-none bg-transparent px-0 py-0 text-brand-olive no-underline underline-offset-4 hover:text-brand-olive-soft hover:underline",
       },
       fullWidth: {
         true: "w-full",

@@ -84,7 +84,7 @@ export function GiftReview({ products }: GiftReviewProps) {
   return (
     <div className="min-h-full bg-bg-page">
       <SiteHeader variant="journey" />
-      <div className="border-b border-border-subtle bg-bg-surface py-3">
+      <div className="bg-bg-surface py-3">
         <Stepper step={3} />
       </div>
 
@@ -98,15 +98,29 @@ export function GiftReview({ products }: GiftReviewProps) {
             </p>
           </div>
 
-          <article className="relative flex gap-4 rounded-xl border border-border-subtle bg-bg-surface p-4">
-            <div className="relative size-[112px] shrink-0 overflow-hidden rounded-lg">
-              <Image
-                src={product.imageUrl}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="112px"
-              />
+          <article className="relative flex gap-4 rounded-xl border border-border-subtle bg-bg-surface p-[19px]">
+            <div className="relative size-[112px] shrink-0">
+              <div className="relative size-full overflow-hidden rounded-lg">
+                <Image
+                  src={product.imageUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="112px"
+                />
+              </div>
+              {/* Figma Btn/Remove — terracotta circle, white X, on image top-outer corner */}
+              <button
+                type="button"
+                aria-label="إزالة من السلة"
+                className="absolute -top-1.5 right-[-6px] z-10 inline-flex size-5 cursor-pointer items-center justify-center rounded-full border border-white bg-[#8c4038] text-white outline-none hover:bg-[#7a3831]"
+                onClick={() => {
+                  clearGiftDraft();
+                  router.push("/gifts");
+                }}
+              >
+                <Icon name="close" size={12} className="text-white" />
+              </button>
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
@@ -137,27 +151,15 @@ export function GiftReview({ products }: GiftReviewProps) {
                 تعديل التخصيص
               </Link>
             </div>
-            <button
-              type="button"
-              aria-label="إزالة من السلة"
-              className="absolute -start-2 -top-2 inline-flex size-5 items-center justify-center rounded-full bg-bg-surface text-text-secondary shadow ring-1 ring-border-subtle hover:text-danger"
-              onClick={() => {
-                clearGiftDraft();
-                router.push("/gifts");
-              }}
-            >
-              <Icon name="close" size={12} />
-            </button>
           </article>
 
-          <div className="rounded-xl border border-border-subtle bg-bg-page-soft/50 p-4">
-            <CheckboxRow
-              id="accept-terms"
-              checked={accepted}
-              onCheckedChange={setAccepted}
-              label="باستمرارك بإتمام الطلب فأنت موافق على الشروط والأحكام"
-            />
-          </div>
+          <CheckboxRow
+            id="accept-terms"
+            checked={accepted}
+            onCheckedChange={setAccepted}
+            label="باستمرارك بإتمام الطلب فأنت موافق على الشروط والأحكام"
+            className="text-body-sm text-text-secondary"
+          />
 
           {error ? (
             <p className="text-body-sm text-danger" role="alert">

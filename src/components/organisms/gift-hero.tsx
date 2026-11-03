@@ -45,10 +45,11 @@ export function GiftHero({ className, onAssist }: GiftHeroProps) {
           <YallahButton
             type="button"
             variant="ghost"
-            className="h-12 min-w-[200px] border-white bg-[rgba(75,77,58,0.35)] hover:bg-[rgba(75,77,58,0.5)]"
+            className="h-12 min-w-0 border-white bg-[rgba(75,77,58,0.35)] px-5 sm:min-w-[200px] sm:px-[22px] hover:bg-[rgba(75,77,58,0.5)]"
             onClick={onAssist}
           >
-            ساعدني أختار هدية
+            <span className="sm:hidden">ساعدني أختار</span>
+            <span className="hidden sm:inline">ساعدني أختار هدية</span>
           </YallahButton>
         </div>
       </div>

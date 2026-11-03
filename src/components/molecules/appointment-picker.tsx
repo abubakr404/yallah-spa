@@ -108,22 +108,23 @@ export function AppointmentPicker({
 
   return (
     <div className={cn("flex w-full flex-col gap-3 text-start", className)}>
-      <div className="flex items-center justify-between">
+      {/* LTR header matches Figma: < next on left, > prev on right */}
+      <div dir="ltr" className="flex items-center justify-between">
         <button
           type="button"
           aria-label="الشهر التالي"
-          className="inline-flex size-8 items-center justify-center text-text-primary"
+          className="inline-flex size-8 cursor-pointer items-center justify-center text-text-primary"
           onClick={() => setCursor(new Date(year, month + 1, 1))}
         >
           <Icon name="chevron-left" size={14} />
         </button>
-        <p className="text-[15px] font-bold text-text-primary">
+        <p className="text-[15px] font-bold text-text-primary" dir="rtl">
           {MONTHS_AR[month]} {year}
         </p>
         <button
           type="button"
           aria-label="الشهر السابق"
-          className="inline-flex size-8 items-center justify-center text-text-primary"
+          className="inline-flex size-8 cursor-pointer items-center justify-center text-text-primary"
           onClick={() => setCursor(new Date(year, month - 1, 1))}
         >
           <Icon name="chevron-right" size={14} />

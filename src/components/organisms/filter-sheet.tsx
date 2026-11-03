@@ -5,6 +5,7 @@ import { YallahButton } from "@/components/molecules/button";
 import { Chip } from "@/components/molecules/chip";
 import { Dropdown } from "@/components/molecules/dropdown";
 import { Sheet } from "@/components/organisms/sheet";
+import { BRANCH_CITY_OPTIONS_WITH_ALL } from "@/lib/branches";
 
 type FilterSheetProps = {
   open?: boolean;
@@ -20,14 +21,7 @@ export type FilterState = {
   budget: string;
 };
 
-const branches = [
-  { value: "all", label: "كل الفروع" },
-  { value: "makkah", label: "مكة" },
-  { value: "jeddah", label: "جدة" },
-  { value: "taif", label: "الطائف" },
-  { value: "riyadh", label: "الرياض" },
-  { value: "dammam", label: "الدمام" },
-];
+const branches = [...BRANCH_CITY_OPTIONS_WITH_ALL];
 
 /**
  * Figma «ورقة-تصفية» — ready for gift browse filters.
@@ -58,6 +52,13 @@ export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps)
       className="md:max-w-[390px]"
       footer={
         <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={clear}
+            className="inline-flex h-11 w-[110px] shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-brand-olive text-button text-brand-olive"
+          >
+            مسح
+          </button>
           <YallahButton
             fullWidth
             onClick={() =>
@@ -66,13 +67,6 @@ export function FilterSheet({ open = true, onClose, onApply }: FilterSheetProps)
           >
             تطبيق التصفية
           </YallahButton>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex h-11 w-[110px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand-olive text-button text-brand-olive"
-          >
-            مسح
-          </button>
         </div>
       }
     >

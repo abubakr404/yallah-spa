@@ -6,6 +6,7 @@ import { Dropdown } from "@/components/molecules/dropdown";
 import { AppointmentPicker, type AppointmentSelection } from "@/components/molecules/appointment-picker";
 import { RadioRow } from "@/components/molecules/radio-row";
 import { Sheet } from "@/components/organisms/sheet";
+import { BRANCH_CITY_OPTIONS } from "@/lib/branches";
 import type { ServicePlace } from "@/types/gift";
 import type { VisitDetails } from "@/types/gift-journey";
 
@@ -19,12 +20,10 @@ type VisitDetailsSheetProps = {
   durationMinutes?: number;
 };
 
-const BRANCHES = [
-  { value: "jeddah", label: "جدة" },
-  { value: "yasmin", label: "الياسمين" },
-  { value: "nakheel", label: "النخيل" },
-  { value: "riyadh-park", label: "الرياض بارك" },
-];
+const BRANCHES = BRANCH_CITY_OPTIONS.map((b) => ({
+  value: b.value,
+  label: b.label,
+}));
 
 export function VisitDetailsSheet({
   open,
@@ -38,7 +37,7 @@ export function VisitDetailsSheet({
   const [place, setPlace] = useState<ServicePlace>(
     value?.place ?? allowedPlaces[0] ?? "center"
   );
-  const [branchId, setBranchId] = useState(value?.branchId ?? "jeddah");
+  const [branchId, setBranchId] = useState(value?.branchId ?? "makkah");
   const [appointment, setAppointment] = useState<AppointmentSelection | null>(
     null
   );
@@ -47,7 +46,7 @@ export function VisitDetailsSheet({
   useEffect(() => {
     if (!open) return;
     setPlace(value?.place ?? allowedPlaces[0] ?? "center");
-    setBranchId(value?.branchId ?? "jeddah");
+    setBranchId(value?.branchId ?? "makkah");
     setError(null);
   }, [open, value, allowedPlaces]);
 

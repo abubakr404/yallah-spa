@@ -187,7 +187,14 @@ export default async function DesignSystemPage() {
               <YallahButton variant="primary">أهدِ هذه الباقة</YallahButton>
               <YallahButton variant="secondary">أهدِ هذه الباقة</YallahButton>
               <YallahButton variant="ghost">أهدِ هذه الباقة</YallahButton>
-              <YallahButton variant="text">أهدِ هذه الباقة</YallahButton>
+              <YallahButton variant="text" className="gap-1">
+                <span className="hidden sm:inline">عرض الكل</span>
+                <Icon name="chevron-left" size={16} />
+              </YallahButton>
+              <YallahButton variant="secondary" className="gap-1.5">
+                التصفية
+                <Icon name="filter" size={16} />
+              </YallahButton>
               <IconButton variant="close" label="إغلاق" />
               <IconButton variant="remove" label="حذف" />
             </DsBlock>

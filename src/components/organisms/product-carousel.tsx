@@ -20,6 +20,7 @@ type ProductCarouselProps = {
 
 /**
  * Figma browse carousel — swipe (touch/mouse) moves the same step as arrows.
+ * Dot count follows real scroll pages (viewport + step), not a fixed /3.
  */
 export function ProductCarousel({
   children,
@@ -42,41 +43,47 @@ export function ProductCarousel({
     moved: false,
   });
   const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [dragging, setDragging] = useState(false);
-  const pageCount = Math.max(1, Math.ceil(items.length / 3));
   const gap = 18;
   const step = (cardWidth + gap) * Math.min(2, Math.max(1, items.length));
 
-  const syncPage = useCallback(() => {
+  const measurePages = useCallback(() => {
     const el = scrollerRef.current;
-    if (!el) return;
+    if (!el) return { count: 1, index: 0 };
     const maxScroll = el.scrollWidth - el.clientWidth;
-    if (maxScroll <= 0) {
-      setPage(0);
-      return;
-    }
+    if (maxScroll <= 1) return { count: 1, index: 0 };
+    const count = Math.max(1, Math.round(maxScroll / step) + 1);
     const ratio = Math.abs(el.scrollLeft) / maxScroll;
-    setPage(Math.min(pageCount - 1, Math.round(ratio * (pageCount - 1))));
-  }, [pageCount]);
+    const index = Math.min(count - 1, Math.round(ratio * (count - 1)));
+    return { count, index };
+  }, [step]);
 
-  /** Scroll by visual delta: positive = next (toward more items / visual left in RTL). */
+  const syncPage = useCallback(() => {
+    const { count, index } = measurePages();
+    setPageCount(count);
+    setPage(index);
+  }, [measurePages]);
+
+  /**
+   * Positive delta = next (more items). Chrome RTL uses positive scrollLeft
+   * for that direction; if the engine ignores it, fall back to negative.
+   */
   const scrollVisual = useCallback((delta: number, behavior: ScrollBehavior) => {
     const el = scrollerRef.current;
     if (!el || delta === 0) return;
     const before = el.scrollLeft;
-    // Most RTL engines: next content → decrease scrollLeft (negative direction)
-    el.scrollBy({ left: -delta, behavior });
-    if (behavior === "auto") {
+    el.scrollBy({ left: delta, behavior });
+    const tryFallback = () => {
       if (el.scrollLeft === before) {
-        el.scrollBy({ left: delta, behavior });
+        el.scrollBy({ left: -delta, behavior });
       }
+    };
+    if (behavior === "auto") {
+      tryFallback();
       return;
     }
-    requestAnimationFrame(() => {
-      if (el.scrollLeft === before) {
-        el.scrollBy({ left: delta, behavior });
-      }
-    });
+    requestAnimationFrame(tryFallback);
   }, []);
 
   /** dir +1 = next, -1 = prev — shared by arrows and swipe. */
@@ -93,12 +100,13 @@ export function ProductCarousel({
     if (!el) return;
     const maxScroll = el.scrollWidth - el.clientWidth;
     if (maxScroll <= 0) return;
-    const target = (index / Math.max(1, pageCount - 1)) * maxScroll;
+    const target =
+      (index / Math.max(1, pageCount - 1)) * maxScroll;
     const before = el.scrollLeft;
-    el.scrollTo({ left: -target, behavior: "smooth" });
+    el.scrollTo({ left: target, behavior: "smooth" });
     requestAnimationFrame(() => {
       if (Math.abs(el.scrollLeft - before) < 1 && target > 0) {
-        el.scrollTo({ left: target, behavior: "smooth" });
+        el.scrollTo({ left: -target, behavior: "smooth" });
       }
     });
     setPage(index);
@@ -117,6 +125,7 @@ export function ProductCarousel({
     if ((e.target as HTMLElement).closest("button, a")) return;
     const el = scrollerRef.current;
     if (!el) return;
+    e.preventDefault();
     dragRef.current = {
       active: true,
       startX: e.clientX,
@@ -134,9 +143,8 @@ export function ProductCarousel({
     if (!drag.active || !el) return;
     const dx = e.clientX - drag.startX;
     if (Math.abs(dx) > 6) drag.moved = true;
-    const isRtl = getComputedStyle(el).direction === "rtl";
-    // Finger right (dx>0): reveal previous in RTL → scrollLeft increases toward 0
-    el.scrollLeft = isRtl ? drag.startScroll + dx : drag.startScroll - dx;
+    // Content follows the finger (RTL scrollLeft grows when dragging right)
+    el.scrollLeft = drag.startScroll + dx;
   };
 
   const endDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -156,12 +164,11 @@ export function ProductCarousel({
     const dx = e.clientX - drag.startX;
     const threshold = Math.min(72, step * 0.25);
     if (el) {
-      // Return to drag start, then apply the same step as arrow buttons
       el.scrollLeft = drag.startScroll;
     }
     if (drag.moved && Math.abs(dx) >= threshold) {
-      // Swipe left (dx<0) → next; swipe right → prev
-      scrollByCards(dx < 0 ? 1 : -1);
+      // Drag right (dx>0) → next; drag left → prev
+      scrollByCards(dx > 0 ? 1 : -1);
     } else {
       syncPage();
     }
@@ -172,14 +179,21 @@ export function ProductCarousel({
   const atStart = page <= 0;
   const atEnd = page >= pageCount - 1;
 
+  const navBtnClass =
+    "absolute z-10 top-1/2 -translate-y-1/2 shadow-sm md:static md:translate-y-0 md:shadow-none";
+
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex items-center gap-2 sm:gap-3">
-        <CarouselNavButton
-          direction="prev"
-          onClick={() => scrollByCards(-1)}
-          disabled={items.length < 2 || atStart}
-        />
+      <div className="relative flex items-center gap-0 sm:gap-3">
+        {!atStart ? (
+          <CarouselNavButton
+            direction="prev"
+            onClick={() => scrollByCards(-1)}
+            className={cn(navBtnClass, "start-2 md:start-auto")}
+          />
+        ) : (
+          <span className="hidden size-[34px] shrink-0 md:block" aria-hidden />
+        )}
         <div
           ref={scrollerRef}
           onScroll={syncPage}
@@ -190,6 +204,7 @@ export function ProductCarousel({
           className={cn(
             "flex min-w-0 flex-1 gap-[18px] overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
             "touch-pan-x snap-x snap-mandatory select-none",
+            "[&_img]:pointer-events-none [&_img]:[-webkit-user-drag:none]",
             dragging
               ? "cursor-grabbing scroll-auto"
               : "cursor-grab scroll-smooth"
@@ -199,25 +214,31 @@ export function ProductCarousel({
           {items.map((child, i) => (
             <div
               key={i}
-              className="w-[min(100%,305px)] shrink-0 grow-0 basis-[305px] snap-start"
+              className="w-[min(100%,305px)] shrink-0 grow-0 basis-[min(100%,305px)] snap-start sm:basis-[305px]"
             >
               {child}
             </div>
           ))}
         </div>
-        <CarouselNavButton
-          direction="next"
-          onClick={() => scrollByCards(1)}
-          disabled={items.length < 2 || atEnd}
-        />
+        {!atEnd ? (
+          <CarouselNavButton
+            direction="next"
+            onClick={() => scrollByCards(1)}
+            className={cn(navBtnClass, "end-2 md:end-auto")}
+          />
+        ) : (
+          <span className="hidden size-[34px] shrink-0 md:block" aria-hidden />
+        )}
       </div>
-      <div className="mt-1 flex w-full justify-center">
-        <IndicatorGroup
-          count={pageCount}
-          activeIndex={page}
-          onSelect={goToPage}
-        />
-      </div>
+      {pageCount > 1 ? (
+        <div className="mt-1 flex w-full justify-center">
+          <IndicatorGroup
+            count={pageCount}
+            activeIndex={page}
+            onSelect={goToPage}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

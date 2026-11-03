@@ -119,6 +119,23 @@ export function AssistantSheet({
               key={product.id}
               className="flex h-[77px] items-center gap-2.5 rounded-xl border border-[#dbd6c7] bg-bg-surface px-2.5 py-2"
             >
+              <div className="relative size-12 shrink-0 overflow-hidden rounded-lg">
+                <Image
+                  src={product.imageUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="48px"
+                />
+              </div>
+              <div className="min-w-0 flex-1 text-start">
+                <p className="truncate text-[12px] font-bold text-[#2e2e26]">
+                  {product.title}
+                </p>
+                <p className="text-[11px] font-medium text-brand-olive">
+                  {formatSar(product.priceSar)}
+                </p>
+              </div>
               <YallahButton
                 type="button"
                 className="h-11 shrink-0 px-4 py-0 text-[13px]"
@@ -129,23 +146,6 @@ export function AssistantSheet({
               >
                 أهدِ هذه
               </YallahButton>
-              <div className="min-w-0 flex-1 text-start">
-                <p className="truncate text-[12px] font-bold text-[#2e2e26]">
-                  {product.title}
-                </p>
-                <p className="text-[11px] font-medium text-brand-olive">
-                  {formatSar(product.priceSar)}
-                </p>
-              </div>
-              <div className="relative size-12 shrink-0 overflow-hidden rounded-lg">
-                <Image
-                  src={product.imageUrl}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="48px"
-                />
-              </div>
             </article>
           ))}
         </div>
