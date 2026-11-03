@@ -17,8 +17,20 @@ export default function manifest(): MetadataRoute.Manifest {
     id: getSiteUrl(),
     icons: [
       {
-        src: "/assets/images/yallah-logo.png",
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.png",
         sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/assets/images/yallah-logo.png",
+        sizes: "1200x1200",
         type: "image/png",
         purpose: "any",
       },
