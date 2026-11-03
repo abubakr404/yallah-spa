@@ -8,14 +8,14 @@ export default async function WelcomePage() {
   const { data: profile } = await fetchCandidateProfile();
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-bg-page">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-bg-page">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(199,173,133,0.28),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(75,77,58,0.12),_transparent_50%)]"
+        className="pointer-events-none absolute inset-0 min-h-full bg-[radial-gradient(ellipse_at_top,_rgba(199,173,133,0.28),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(75,77,58,0.12),_transparent_45%),linear-gradient(180deg,_#faf6f0_0%,_#ffffff_45%,_#f1ece0_100%)]"
       />
       <SiteHeader />
 
-      <main className="relative mx-auto flex max-w-6xl flex-col px-4 pb-16 pt-10 text-start sm:px-6 sm:pt-16 lg:pt-20">
+      <main className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 pb-16 pt-10 text-start sm:px-6 sm:pt-16 lg:pt-20">
         {/* In RTL grid, column 1 is on the inline-start (right) */}
         <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
           <div className="order-2 lg:order-1">
@@ -50,6 +50,9 @@ export default async function WelcomePage() {
             <div className="mt-8 flex flex-wrap items-center justify-start gap-3">
               <YallahButton asChild>
                 <Link href="/gifts">ابدأ رحلة الإهداء</Link>
+              </YallahButton>
+              <YallahButton variant="secondary" asChild>
+                <Link href="/compare">قبل / بعد</Link>
               </YallahButton>
               <YallahButton variant="secondary" asChild>
                 <Link href="/design-system">نظام التصميم</Link>
@@ -89,10 +92,6 @@ export default async function WelcomePage() {
             </div>
           </aside>
         </section>
-
-        <p className="mt-12 text-center text-caption">
-          {profile.nameEn} · Frontend · Mock API layer ready for a real backend
-        </p>
       </main>
     </div>
   );

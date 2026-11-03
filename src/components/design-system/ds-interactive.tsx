@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Checkbox, IndicatorGroup, Radio } from "@/components/atoms";
+import { Checkbox, Icon, IndicatorGroup, Radio } from "@/components/atoms";
 import {
   CarouselNavButton,
   CheckboxRow,
@@ -78,9 +78,9 @@ export function DsFormControlsDemo() {
           defaultValue="all"
           options={[
             { value: "all", label: "كل الفروع" },
-            { value: "riyadh", label: "الرياض" },
-            { value: "jeddah", label: "جدة" },
             { value: "makkah", label: "مكة" },
+            { value: "jeddah", label: "جدة" },
+            { value: "riyadh", label: "الرياض" },
           ]}
         />
       </DsBlock>
@@ -143,8 +143,14 @@ export function DsFilterSheetDemo() {
   const [open, setOpen] = useState(false);
   return (
     <div className="flex flex-col items-start gap-3">
-      <YallahButton type="button" onClick={() => setOpen(true)}>
-        فتح ورقة التصفية
+      <YallahButton
+        type="button"
+        variant="secondary"
+        className="gap-1.5"
+        onClick={() => setOpen(true)}
+      >
+        التصفية
+        <Icon name="filter" size={16} />
       </YallahButton>
       <p className="text-caption">
         على الهاتف: bottom sheet · على الشاشات الكبيرة: نافذة متمركزة.

@@ -14,27 +14,29 @@ type GiftProductCardProps = {
   onGift?: (id: string) => void;
 };
 
-/** Figma «بطاقة-منتج-هدية» — 305×405, image 168. */
+/** Figma «بطاقة-منتج-هدية» — image 168, body hugs content (no empty footer gap). */
 export function GiftProductCard({
   product,
   className,
   onGift,
 }: GiftProductCardProps) {
   const branchLabel = `متوفرة في ${product.branchCount} فروع`;
+  const showServices = product.serviceCount >= 2;
 
   return (
     <article
       className={cn(
-        "flex h-[405px] w-full max-w-[305px] flex-col overflow-hidden rounded-2xl border border-border-subtle bg-bg-surface text-start",
+        "flex w-full max-w-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-bg-surface text-start sm:max-w-[305px]",
         className
       )}
     >
-      <div className="relative h-[168px] w-full shrink-0">
+      <div className="group relative h-[168px] w-full shrink-0 overflow-hidden">
         <Image
           src={product.imageUrl}
           alt={product.title}
           fill
-          className="object-cover"
+          draggable={false}
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 [-webkit-user-drag:none]"
           sizes="305px"
         />
         {product.badge ? (
@@ -44,7 +46,7 @@ export function GiftProductCard({
         ) : null}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-2.5 px-3.5 pb-3.5 pt-3">
+      <div className="flex flex-col gap-2.5 px-3.5 pb-3.5 pt-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <h3 className="truncate text-base font-bold leading-[23px] text-text-primary">
@@ -70,29 +72,28 @@ export function GiftProductCard({
 
         <Divider />
 
-        <div className="flex items-center justify-between gap-2">
-          <MetaRow icon="clock" label={`${product.durationMinutes} دقيقة`} />
-          {product.serviceCount > 1 ? (
-            <MetaRow
-              icon="services"
-              label={`${product.serviceCount} خدمات`}
-              tone="strong"
-            />
-          ) : null}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <MetaRow icon="clock" label={`${product.durationMinutes} دقيقة`} />
+            {showServices ? (
+              <MetaRow
+                icon="services"
+                label={`${product.serviceCount} خدمات`}
+                tone="strong"
+              />
+            ) : null}
+          </div>
+          <MetaRow icon="location" label={branchLabel} className="self-start" />
         </div>
 
-        <MetaRow icon="location" label={branchLabel} className="self-start" />
-
-        <div className="mt-auto pt-1">
-          <YallahButton
-            fullWidth
-            type="button"
-            className="py-3"
-            onClick={() => onGift?.(product.id)}
-          >
-            أهدِ هذه الباقة
-          </YallahButton>
-        </div>
+        <YallahButton
+          fullWidth
+          type="button"
+          className="py-3"
+          onClick={() => onGift?.(product.id)}
+        >
+          أهدِ هذه الباقة
+        </YallahButton>
       </div>
     </article>
   );

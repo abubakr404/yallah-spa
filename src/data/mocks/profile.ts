@@ -4,7 +4,7 @@ import type { CandidateProfile } from "@/types/gift";
 export const mockCandidateProfile: CandidateProfile = {
   nameAr: "أبوبكر",
   nameEn: "Abubakr",
-  role: "Frontend Engineer",
+  role: "UX/UI & Frontend",
   summaryAr:
     "مرحباً، أنا أبوبكر — مطوّر واجهات أمامية. هذا المشروع اختبار عملي لإعادة تصميم تجربة الإهداء في يلا سبا، مبني بنمط Atomic Design مع Next.js و Tailwind و shadcn.",
   summaryEn:

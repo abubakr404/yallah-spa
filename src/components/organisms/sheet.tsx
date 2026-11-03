@@ -85,10 +85,10 @@ export function Sheet({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-1.5 text-body-sm font-medium text-[#615c52] outline-none hover:text-text-primary"
+                className="inline-flex cursor-pointer items-center gap-1.5 text-body-sm font-medium text-[#615c52] outline-none hover:text-text-primary"
               >
-                <Icon name="close" size={14} />
                 <span>إغلاق</span>
+                <Icon name="close" size={14} className="shrink-0" />
               </button>
             ) : null}
           </div>

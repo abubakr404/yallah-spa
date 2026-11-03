@@ -106,7 +106,7 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
   return (
     <div className="min-h-full bg-bg-page">
       <SiteHeader variant="journey" />
-      <div className="border-b border-border-subtle bg-bg-surface py-3">
+      <div className="bg-bg-surface py-3">
         <Stepper step={2} />
       </div>
 
@@ -121,31 +121,32 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
             </p>
           </div>
 
-          <div className="rounded-xl border border-border-subtle bg-bg-page-soft/60 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
+          {/* Figma 94:147 — white + border; title/duration right, «تغير الهدية» left */}
+          <div className="flex flex-col gap-2.5 overflow-hidden rounded-[14px] border border-border-subtle bg-bg-surface px-4 py-3.5">
+            <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2">
-                <Icon name="clock" size={14} className="text-brand-olive" />
-                <span className="truncate text-body font-medium text-text-primary">
-                  {product.title}
-                </span>
-                <span className="text-body-sm text-text-secondary">
+                <Icon name="clock" size={14} className="shrink-0" />
+                <span className="shrink-0 text-[12px] font-medium leading-[17px] text-[#615c52]">
                   {product.durationMinutes} دقيقة
+                </span>
+                <span className="truncate text-[15px] font-bold leading-[21px] text-text-primary">
+                  {product.title}
                 </span>
               </div>
               <YallahButton
                 variant="text"
                 type="button"
-                className="text-caption"
+                className="shrink-0 text-[14px] leading-5"
                 onClick={() => setAssistOpen(true)}
               >
-                تغيير
+                تغير الهدية
               </YallahButton>
             </div>
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm text-text-secondary">
+            <div className="flex items-center gap-2.5">
+              <p className="min-w-0 flex-1 text-[13px] leading-[18px] text-[#615c52]">
                 {product.description}
               </p>
-              <p className="text-lg font-bold text-brand-olive">
+              <p className="shrink-0 text-[15px] font-bold leading-[31px] text-brand-olive">
                 {formatSar(product.priceSar)}
               </p>
             </div>
@@ -162,31 +163,32 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
               type="button"
               onClick={() => setVisitOpen(true)}
               className={cn(
-                "flex w-full items-center justify-between gap-3 rounded-xl border bg-bg-surface px-4 py-3 text-start transition-colors hover:bg-bg-muted/60",
+                "flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border bg-bg-surface p-3.5 text-start transition-colors hover:bg-bg-muted/60",
                 fieldErrors.visit ? "border-danger" : "border-border-subtle"
               )}
             >
-              <div className="min-w-0">
+              {/* RTL: action at start (right) — icon then label as Figma screenshot */}
+              <span className="inline-flex shrink-0 items-center gap-2 text-[13px] font-medium leading-[18px] text-brand-olive">
+                <Icon name="calendar" size={14} className="shrink-0" />
+                <span>تحديد التفاصيل</span>
+              </span>
+              <div className="min-w-0 text-end">
                 {draft.visit ? (
                   <>
-                    <p className="truncate text-body-sm font-medium text-text-primary">
+                    <p className="truncate text-[13px] font-medium leading-[18px] text-text-primary">
                       {placeLabel} · {draft.visit.branchName} ·{" "}
                       {draft.visit.slotLabel}
                     </p>
-                    <p className="text-caption text-text-secondary">
+                    <p className="text-[11px] leading-[15px] text-[#615c52]">
                       المكان والفرع والموعد
                     </p>
                   </>
                 ) : (
-                  <p className="text-body-sm text-text-secondary">
+                  <p className="text-[13px] leading-[18px] text-text-secondary">
                     لم يُحدد بعد — اضغط لتحديد التفاصيل
                   </p>
                 )}
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1.5 text-body-sm font-medium text-brand-olive">
-                <Icon name="calendar" size={14} />
-                تحديد التفاصيل
-              </span>
             </button>
             {fieldErrors.visit ? (
               <p className="text-[12px] font-medium text-danger" role="alert">
@@ -205,7 +207,7 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
               value={draft.recipientName}
               error={fieldErrors.recipientName}
               onChange={(e) => patch({ recipientName: e.target.value })}
-              placeholder="سارة أحمد"
+              placeholder="اسم من ستصله الهدية"
             />
           </fieldset>
 
@@ -219,7 +221,7 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
               value={draft.senderName}
               error={fieldErrors.senderName}
               onChange={(e) => patch({ senderName: e.target.value })}
-              placeholder="أحمد"
+              placeholder="اسمك كما سيظهر على البطاقة"
             />
           </fieldset>
 
@@ -295,16 +297,21 @@ export function GiftPersonalize({ product, catalog }: GiftPersonalizeProps) {
             </p>
           ) : null}
 
-          <div className="flex flex-wrap gap-3 pt-2">
+          {/* RTL: رجوع أولاً (يمين) ثم المتابعة (يسار / ثلثان) */}
+          <div className="flex w-full items-stretch gap-2.5 pt-2">
+            <YallahButton
+              variant="secondary"
+              asChild
+              className="min-w-0 flex-1 basis-0"
+            >
+              <Link href="/gifts">رجوع</Link>
+            </YallahButton>
             <YallahButton
               type="button"
-              className="min-w-[240px]"
+              className="min-w-0 flex-[2] basis-0"
               onClick={continueToReview}
             >
               متابعة للمراجعة
-            </YallahButton>
-            <YallahButton variant="secondary" asChild className="min-w-[120px]">
-              <Link href="/gifts">رجوع</Link>
             </YallahButton>
           </div>
         </section>

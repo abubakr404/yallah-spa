@@ -36,9 +36,9 @@ export function OrderSummaryCard({
         className
       )}
     >
-      <div className="border-b border-border-subtle px-5 py-5 text-start">
-        <h2 className="text-card-title text-text-primary">ملخص الحجز</h2>
-        <p className="mt-1 text-caption text-text-secondary">
+      <div className="border-b border-border-subtle bg-bg-muted px-5 pb-4 pt-5 text-start">
+        <h2 className="text-base font-bold text-brand-olive">ملخص الحجز</h2>
+        <p className="mt-1 text-[12px] leading-normal text-[#615c52]">
           ملخص سلة الخدمات قبل الإتمام
         </p>
       </div>
