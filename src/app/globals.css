@@ -194,3 +194,62 @@
     @apply text-[11px] font-medium leading-4;
   }
 }
+
+/* Swiper pagination — Figma «نقطة-نشطة / نقطة-خاملة» (active 16×7 · idle 7×7) */
+.yallah-swiper {
+  --swiper-pagination-color: var(--brand-olive);
+  --swiper-pagination-bullet-size: 7px;
+  --swiper-pagination-bullet-width: 7px;
+  --swiper-pagination-bullet-height: 7px;
+  --swiper-pagination-bullet-border-radius: 9999px;
+  --swiper-pagination-bullet-inactive-color: var(--border-soft);
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-opacity: 1;
+  --swiper-pagination-bullet-horizontal-gap: 0px;
+}
+
+.yallah-swiper .yallah-swiper-pagination.swiper-pagination-bullets,
+.yallah-swiper .yallah-swiper-pagination {
+  position: relative !important;
+  inset: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin-top: 4px;
+  display: flex !important;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.yallah-swiper .yallah-swiper-pagination:empty,
+.yallah-swiper
+  .yallah-swiper-pagination:not(:has(.swiper-pagination-bullet)) {
+  display: none !important;
+}
+
+.yallah-swiper .swiper-pagination-bullet {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 9999px !important;
+  background: var(--border-soft) !important;
+  opacity: 1 !important;
+  vertical-align: middle;
+  transition:
+    width 180ms ease,
+    background-color 180ms ease;
+}
+
+.yallah-swiper .swiper-pagination-bullet-active {
+  width: 16px !important;
+  height: 7px !important;
+  border-radius: 9999px !important;
+  background: var(--brand-olive) !important;
+  opacity: 1 !important;
+}

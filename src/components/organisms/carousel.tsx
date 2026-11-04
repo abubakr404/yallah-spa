@@ -1,14 +1,15 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
-import { IndicatorGroup } from "@/components/atoms/indicator";
+import { useLocale } from "next-intl";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { Swiper as SwiperInstance } from "swiper";
+import { A11y, Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { CarouselNavButton } from "@/components/molecules/carousel-nav-button";
 import { cn } from "@/lib/utils";
+
+import "swiper/css";
+import "swiper/css/pagination";
 
 type CarouselProps = {
   children: ReactNode[];
@@ -20,8 +21,7 @@ type CarouselProps = {
 };
 
 /**
- * Gift-grid / suggestions carousel — arrows + dots only (no swipe / drag).
- * Track is LTR for transforms; chrome stays RTL.
+ * Single-slide carousel via Swiper — custom arrows + Swiper pagination.
  */
 export function Carousel({
   children,
@@ -32,49 +32,79 @@ export function Carousel({
 }: CarouselProps) {
   const slides = children.filter(Boolean);
   const count = slides.length;
-  const [index, setIndex] = useState(0);
-
-  const go = useCallback(
-    (next: number) => {
-      if (count === 0) return;
-      setIndex(Math.max(0, Math.min(count - 1, next)));
-    },
-    [count]
-  );
+  const locale = useLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+  const paginationRef = useRef<HTMLDivElement>(null);
+  const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   useEffect(() => {
-    if (!autoPlayMs || count < 2) return;
-    const id = window.setInterval(() => {
-      setIndex((i) => (i >= count - 1 ? 0 : i + 1));
-    }, autoPlayMs);
-    return () => window.clearInterval(id);
-  }, [autoPlayMs, count]);
+    if (!swiper) return;
+    if (autoPlayMs > 0 && count > 1) {
+      swiper.autoplay?.start();
+    } else {
+      swiper.autoplay?.stop();
+    }
+  }, [swiper, autoPlayMs, count]);
 
   if (count === 0) return null;
 
-  const atStart = index <= 0;
-  const atEnd = index >= count - 1;
+  const syncEdges = (instance: SwiperInstance) => {
+    setAtStart(instance.isBeginning);
+    setAtEnd(instance.isEnd);
+  };
 
   return (
-    <div className={cn("relative w-full", className)}>
-      <div className="overflow-hidden rounded-lg" dir="ltr">
-        <div
-          className="flex transition-transform duration-300 ease-out"
-          style={{
-            transform: `translateX(-${index * 100}%)`,
-          }}
-        >
-          {slides.map((slide, i) => (
-            <div key={i} className="w-full shrink-0 grow-0 basis-full" dir="rtl">
-              {slide}
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className={cn("yallah-swiper relative w-full", className)}>
+      <Swiper
+        key={dir}
+        className="overflow-hidden rounded-lg"
+        modules={[A11y, Autoplay, Pagination]}
+        dir={dir}
+        slidesPerView={1}
+        spaceBetween={0}
+        autoplay={
+          autoPlayMs > 0
+            ? { delay: autoPlayMs, disableOnInteraction: false }
+            : false
+        }
+        pagination={
+          showDots
+            ? {
+                clickable: true,
+                el: paginationRef.current,
+              }
+            : false
+        }
+        onBeforeInit={(instance) => {
+          const pagination = instance.params.pagination;
+          if (pagination && typeof pagination !== "boolean") {
+            pagination.el = paginationRef.current;
+          }
+        }}
+        onSwiper={(instance) => {
+          setSwiper(instance);
+          syncEdges(instance);
+        }}
+        onSlideChange={syncEdges}
+        onReachBeginning={syncEdges}
+        onReachEnd={syncEdges}
+        onFromEdge={syncEdges}
+      >
+        {slides.map((slide, i) => (
+          <SwiperSlide key={i} className="!h-auto">
+            {slide}
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       <div className="mt-3 flex items-center justify-between gap-3">
         {showDots ? (
-          <IndicatorGroup count={count} activeIndex={index} onSelect={go} />
+          <div
+            ref={paginationRef}
+            className="yallah-swiper-pagination !w-auto"
+          />
         ) : (
           <span />
         )}
@@ -83,13 +113,13 @@ export function Carousel({
             {!atStart ? (
               <CarouselNavButton
                 direction="prev"
-                onClick={() => go(index - 1)}
+                onClick={() => swiper?.slidePrev()}
               />
             ) : null}
             {!atEnd ? (
               <CarouselNavButton
                 direction="next"
-                onClick={() => go(index + 1)}
+                onClick={() => swiper?.slideNext()}
               />
             ) : null}
           </div>
