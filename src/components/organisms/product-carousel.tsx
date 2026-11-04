@@ -5,7 +5,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { IndicatorGroup } from "@/components/atoms/indicator";
@@ -19,8 +18,7 @@ type ProductCarouselProps = {
 };
 
 /**
- * Figma browse carousel — swipe (touch/mouse) moves the same step as arrows.
- * Dot count follows real scroll pages (viewport + step), not a fixed /3.
+ * Figma browse carousel — arrow + dots only (no swipe / drag).
  */
 export function ProductCarousel({
   children,
@@ -29,22 +27,8 @@ export function ProductCarousel({
 }: ProductCarouselProps) {
   const items = children.filter(Boolean);
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{
-    active: boolean;
-    startX: number;
-    startScroll: number;
-    pointerId: number | null;
-    moved: boolean;
-  }>({
-    active: false,
-    startX: 0,
-    startScroll: 0,
-    pointerId: null,
-    moved: false,
-  });
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
-  const [dragging, setDragging] = useState(false);
   const gap = 18;
   const step = (cardWidth + gap) * Math.min(2, Math.max(1, items.length));
 
@@ -86,7 +70,6 @@ export function ProductCarousel({
     requestAnimationFrame(tryFallback);
   }, []);
 
-  /** dir +1 = next, -1 = prev — shared by arrows and swipe. */
   const scrollByCards = useCallback(
     (dir: 1 | -1) => {
       scrollVisual(dir * step, "smooth");
@@ -100,8 +83,7 @@ export function ProductCarousel({
     if (!el) return;
     const maxScroll = el.scrollWidth - el.clientWidth;
     if (maxScroll <= 0) return;
-    const target =
-      (index / Math.max(1, pageCount - 1)) * maxScroll;
+    const target = (index / Math.max(1, pageCount - 1)) * maxScroll;
     const before = el.scrollLeft;
     el.scrollTo({ left: target, behavior: "smooth" });
     requestAnimationFrame(() => {
@@ -120,59 +102,6 @@ export function ProductCarousel({
     ro.observe(el);
     return () => ro.disconnect();
   }, [syncPage, items.length]);
-
-  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button, a")) return;
-    const el = scrollerRef.current;
-    if (!el) return;
-    e.preventDefault();
-    dragRef.current = {
-      active: true,
-      startX: e.clientX,
-      startScroll: el.scrollLeft,
-      pointerId: e.pointerId,
-      moved: false,
-    };
-    el.setPointerCapture(e.pointerId);
-    setDragging(true);
-  };
-
-  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    const el = scrollerRef.current;
-    if (!drag.active || !el) return;
-    const dx = e.clientX - drag.startX;
-    if (Math.abs(dx) > 6) drag.moved = true;
-    // Content follows the finger (RTL scrollLeft grows when dragging right)
-    el.scrollLeft = drag.startScroll + dx;
-  };
-
-  const endDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    const el = scrollerRef.current;
-    if (!drag.active) return;
-    drag.active = false;
-    if (el && drag.pointerId != null) {
-      try {
-        el.releasePointerCapture(drag.pointerId);
-      } catch {
-        /* already released */
-      }
-    }
-    setDragging(false);
-
-    const dx = e.clientX - drag.startX;
-    const threshold = Math.min(72, step * 0.25);
-    if (el) {
-      el.scrollLeft = drag.startScroll;
-    }
-    if (drag.moved && Math.abs(dx) >= threshold) {
-      // Drag right (dx>0) → next; drag left → prev
-      scrollByCards(dx > 0 ? 1 : -1);
-    } else {
-      syncPage();
-    }
-  };
 
   if (items.length === 0) return null;
 
@@ -197,24 +126,12 @@ export function ProductCarousel({
         <div
           ref={scrollerRef}
           onScroll={syncPage}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          className={cn(
-            "flex min-w-0 flex-1 gap-[18px] overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-            "touch-pan-x snap-x snap-mandatory select-none",
-            "[&_img]:pointer-events-none [&_img]:[-webkit-user-drag:none]",
-            dragging
-              ? "cursor-grabbing scroll-auto"
-              : "cursor-grab scroll-smooth"
-          )}
-          style={{ touchAction: "pan-x" }}
+          className="flex min-w-0 flex-1 gap-[18px] overflow-x-hidden overscroll-x-none scroll-smooth pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {items.map((child, i) => (
             <div
               key={i}
-              className="w-[min(100%,305px)] shrink-0 grow-0 basis-[min(100%,305px)] snap-start sm:basis-[305px]"
+              className="w-[min(100%,305px)] shrink-0 grow-0 basis-[min(100%,305px)] sm:basis-[305px]"
             >
               {child}
             </div>

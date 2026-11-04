@@ -3,9 +3,7 @@
 import {
   useCallback,
   useEffect,
-  useRef,
   useState,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { IndicatorGroup } from "@/components/atoms/indicator";
@@ -22,7 +20,7 @@ type CarouselProps = {
 };
 
 /**
- * Gift-grid / suggestions carousel — swipe + dots + edge-aware arrows.
+ * Gift-grid / suggestions carousel — arrows + dots only (no swipe / drag).
  * Track is LTR for transforms; chrome stays RTL.
  */
 export function Carousel({
@@ -35,13 +33,6 @@ export function Carousel({
   const slides = children.filter(Boolean);
   const count = slides.length;
   const [index, setIndex] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState(0);
-  const dragRef = useRef<{
-    active: boolean;
-    startX: number;
-    pointerId: number | null;
-  }>({ active: false, startX: 0, pointerId: null });
 
   const go = useCallback(
     (next: number) => {
@@ -59,43 +50,6 @@ export function Carousel({
     return () => window.clearInterval(id);
   }, [autoPlayMs, count]);
 
-  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button, a")) return;
-    dragRef.current = {
-      active: true,
-      startX: e.clientX,
-      pointerId: e.pointerId,
-    };
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setDragging(true);
-    setDragOffset(0);
-  };
-
-  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (!drag.active) return;
-    setDragOffset(e.clientX - drag.startX);
-  };
-
-  const endDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (!drag.active) return;
-    drag.active = false;
-    try {
-      if (drag.pointerId != null) {
-        e.currentTarget.releasePointerCapture(drag.pointerId);
-      }
-    } catch {
-      /* already released */
-    }
-    const delta = e.clientX - drag.startX;
-    setDragging(false);
-    setDragOffset(0);
-    const threshold = 48;
-    if (delta <= -threshold) go(index + 1);
-    else if (delta >= threshold) go(index - 1);
-  };
-
   if (count === 0) return null;
 
   const atStart = index <= 0;
@@ -103,25 +57,11 @@ export function Carousel({
 
   return (
     <div className={cn("relative w-full", className)}>
-      <div
-        className={cn(
-          "overflow-hidden rounded-lg select-none",
-          dragging ? "cursor-grabbing" : "cursor-grab"
-        )}
-        dir="ltr"
-        style={{ touchAction: "pan-y" }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-      >
+      <div className="overflow-hidden rounded-lg" dir="ltr">
         <div
-          className={cn(
-            "flex ease-out",
-            dragging ? "transition-none" : "transition-transform duration-300"
-          )}
+          className="flex transition-transform duration-300 ease-out"
           style={{
-            transform: `translateX(calc(-${index * 100}% + ${dragOffset}px))`,
+            transform: `translateX(-${index * 100}%)`,
           }}
         >
           {slides.map((slide, i) => (
@@ -134,11 +74,7 @@ export function Carousel({
 
       <div className="mt-3 flex items-center justify-between gap-3">
         {showDots ? (
-          <IndicatorGroup
-            count={count}
-            activeIndex={index}
-            onSelect={go}
-          />
+          <IndicatorGroup count={count} activeIndex={index} onSelect={go} />
         ) : (
           <span />
         )}
