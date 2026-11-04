@@ -18,7 +18,8 @@ type ProductCarouselProps = {
 };
 
 /**
- * Figma browse carousel — Swiper + custom arrows + Swiper pagination (styled).
+ * Figma browse carousel — Swiper + pagination.
+ * Arrows only from `md` up; small screens use swipe + dots.
  */
 export function ProductCarousel({
   children,
@@ -40,21 +41,17 @@ export function ProductCarousel({
     setAtEnd(instance.isEnd);
   };
 
-  const navBtnClass =
-    "absolute z-10 top-1/2 -translate-y-1/2 shadow-sm md:static md:translate-y-0 md:shadow-none";
-
   return (
     <div className={cn("yallah-swiper w-full", className)}>
-      <div className="relative flex items-center gap-0 sm:gap-3">
-        {!atStart ? (
-          <CarouselNavButton
-            direction="prev"
-            onClick={() => swiper?.slidePrev()}
-            className={cn(navBtnClass, "start-2 md:start-auto")}
-          />
-        ) : (
-          <span className="hidden size-[34px] shrink-0 md:block" aria-hidden />
-        )}
+      <div className="flex items-center gap-2">
+        <div className="hidden size-[34px] shrink-0 items-center justify-center md:flex">
+          {!atStart ? (
+            <CarouselNavButton
+              direction="prev"
+              onClick={() => swiper?.slidePrev()}
+            />
+          ) : null}
+        </div>
 
         <Swiper
           key={dir}
@@ -97,15 +94,14 @@ export function ProductCarousel({
           ))}
         </Swiper>
 
-        {!atEnd ? (
-          <CarouselNavButton
-            direction="next"
-            onClick={() => swiper?.slideNext()}
-            className={cn(navBtnClass, "end-2 md:end-auto")}
-          />
-        ) : (
-          <span className="hidden size-[34px] shrink-0 md:block" aria-hidden />
-        )}
+        <div className="hidden size-[34px] shrink-0 items-center justify-center md:flex">
+          {!atEnd ? (
+            <CarouselNavButton
+              direction="next"
+              onClick={() => swiper?.slideNext()}
+            />
+          ) : null}
+        </div>
       </div>
 
       <div ref={paginationRef} className="yallah-swiper-pagination" />

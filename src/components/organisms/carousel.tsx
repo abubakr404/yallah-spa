@@ -109,7 +109,7 @@ export function Carousel({
           <span />
         )}
         {showNav && count > 1 ? (
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 md:flex">
             {!atStart ? (
               <CarouselNavButton
                 direction="prev"
